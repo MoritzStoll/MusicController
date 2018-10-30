@@ -3,6 +3,7 @@ body {
   height: 100%;
   background: lightcoral;
   margin: 0;
+  font-family: 'Helvetica';
 }
 
 .screenWrapper {

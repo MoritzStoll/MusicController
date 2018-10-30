@@ -14,11 +14,66 @@
     </div>
 
     <div class="screenWrapper" id="setupScreen">
+        <div class="noteChordSelection">
+            <div id="notes">
+                <h2>Noten</h2>
+                <select name="notes" id="noteSelect">
+                    <option value="c">c</option>
+                    <option value="c#">c#</option>
+                    <option value="d">d</option>
+                    <option value="d#">d#</option>
+                    <option value="e">e</option>
+                    <option value="f">f</option>
+                    <option value="f#">f#</option>
+                    <option value="g">g</option>
+                    <option value="g#">g#</option>
+                    <option value="a">a</option>
+                    <option value="a#">a#</option>
+                    <option value="b">b</option>
+                </select>
+            </div>
+
+            <div id=chords>
+                <h2>Chords</h2>
+                <select name="chords" id="chordSelect">
+                    <option value="c">c</option>
+                    <option value="c#">c#</option>
+                    <option value="d">d</option>
+                    <option value="d#">d#</option>
+                    <option value="e">e</option>
+                    <option value="f">f</option>
+                    <option value="f#">f#</option>
+                    <option value="g">g</option>
+                    <option value="g#">g#</option>
+                    <option value="a">a</option>
+                    <option value="a#">a#</option>
+                    <option value="b">b</option>
+                </select>
+            </div>
+            <div id="chordScale">
+                <h2>ChordAddon</h2> 
+                <select name="chordAddon" id="chordAddonSelect">
+                    <option value="m">minor</option>
+                    <option value="">major</option>
+                </select>
+
+            </div>
+            
+            
+        </div>
+        
     </div>
 
     <div class="screenWrapper" id="playScreen">
+        
+        <button class="button" id="button1">B1</button>
+        <button class="button" id="button2">B2</button>
+        <button class="button" id="button3">B3</button>
     </div>
 
+
+    <script src="src/sound.js"></script>
+    <script src="src/teoria.js"></script>
 </body>
 
 </html>
