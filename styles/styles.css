@@ -23,3 +23,20 @@ body {
 #playScreen {
   background: purple;
 }
+
+#sliders {
+  display: flex;
+  flex-direction: row;
+}
+
+#compressorSliders {
+  background: #215e78;
+}
+
+#filterSliders {
+  background: rgb(48, 146, 196);
+}
+
+#noteChordSelection {
+  background: pink
+}

@@ -14,7 +14,7 @@
     </div>
 
     <div class="screenWrapper" id="setupScreen">
-        <div class="noteChordSelection">
+        <div id="noteChordSelection">
             <div id="notes">
                 <h2>Noten</h2>
                 <select name="notes" id="noteSelect">
@@ -61,8 +61,71 @@
             
             
         </div>
-        
+        <div id="sliders">
+            <div id="compressorSliders">    
+                <h2>Compressor</h2>
+                <div id="threshold" class="sliderWrapper">
+                    <h3>Threshold</h3>
+                    <input id="thresholdSlider" type="range" min="0" max="100" value="10" class="slider">
+                    <span id="thresholdOut">-24 </span>
+                </div>
+                                                    
+                <div id="ratio" class="sliderWrapper">
+                    <h3>Ratio</h3>
+                    <input id="ratioSlider" type="range" min="0" max="100" value="0" class="slider">
+                    <span id="ratioOut">12</span>
+                </div>
+
+                <div id="knee" class="sliderWrapper">
+                    <h3>Knee</h3>
+                    <input id="kneeSlider" type="range" min="0" max="80" value="0" class="slider">
+                    <span id="kneeOut">30</span>
+                </div>
+
+                <div id="attack" class="sliderWrapper">
+                    <h3>Attack</h3>
+                    <input id="attackSlider" type="range" min="0" max="100" value="0" class="slider">
+                    <span id="attackOut">0.003</span>
+                </div>
+
+                <div id="release" class="sliderWrapper">
+                    <h3>Release</h3>
+                    <input id="releaseSlider" type="range" min="0" max="100" value="0" class="slider">
+                    <span id="releaseOut">0.25</span>
+                </div>
+            </div>
+
+            <div id="filterSliders">        
+                <h2>Filter</h2>
+                <div id="frequency" class="sliderWrapper">
+                    <h3>frequency</h3>
+                    <input id="frequencySlider" type="range" min="20" max="20000" value="1000" class="slider">
+                    <span id="frequencyOut">1000 Hz</span>
+                </div>
+                                                    
+                <div id="detune" class="sliderWrapper">
+                    <h3>detune</h3>
+                    <input id="detuneSlider" type="range" min="-100" max="100" value="0" class="slider">
+                    <span id="detuneOut">12</span>
+                </div>
+
+                <div id="q" class="sliderWrapper">
+                    <h3>q</h3>
+                    <input id="qSlider" type="range" min="0" max="100" value="0" class="slider">
+                    <span id="qOut">30</span>
+                </div>
+
+                <div id="gain" class="sliderWrapper">
+                    <h3>gain</h3>
+                    <input id="gainSlider" type="range" min="0" max="100" value="0" class="slider">
+                    <span id="gainOut">1</span>
+                </div>
+            </div>
+
+
+        </div>
     </div>
+    
 
     <div class="screenWrapper" id="playScreen">
         

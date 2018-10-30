@@ -14,20 +14,38 @@ filter.connect(compressor);
 compressor.connect(gainNode);
 gainNode.connect(context.destination);
 gainNode.gain.value = 0.9;
- 
 
 
-filter.type = "lowpass";
-filter.frequency.value = 500;
-filter.detune.value = 30;
-filter.Q.value = 3;
-filter.gain.value = 30;
 
-compressor.threshold.value = -50;
-compressor.ratio.value = 16;
-compressor.knee.value = 30;
-compressor.attack.value = 0;
-compressor.release.value = 0.25;
+document.getElementById("thresholdSlider").addEventListener("input", function() {
+    var thresholdValue = this.value - 100
+    compressor.threshold.value = thresholdValue
+    document.getElementById("thresholdOut").innerHTML = thresholdValue + " dB";
+})
+
+document.getElementById("ratioSlider").addEventListener("input", function() {
+    var ratioValue = this.value/5
+    compressor.ratio.value = ratioValue
+    document.getElementById("ratioOut").innerHTML = ratioValue;
+})
+
+document.getElementById("kneeSlider").addEventListener("input", function() {
+    var kneeValue = this.value/2
+    compressor.knee.value = kneeValue
+    document.getElementById("kneeOut").innerHTML = kneeValue;
+})
+
+document.getElementById("attackSlider").addEventListener("input", function() {
+    var attackValue = this.value/100;
+    compressor.attack.value = attackValue;
+    document.getElementById("attackOut").innerHTML = attackValue + " sec";
+})
+
+document.getElementById("releaseSlider").addEventListener("input", function() {
+    var releaseValue = this.value/100;
+    compressor.release.value = releaseValue;
+    document.getElementById("releaseOut").innerHTML = releaseValue + " sec";
+})
 
 
 // Play Chords and Notes
