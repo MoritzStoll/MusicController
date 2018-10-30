@@ -1,0 +1,26 @@
+html,
+body {
+  height: 100%;
+  background: tomato;
+  margin: 0;
+  display: flex;
+}
+
+.screenWrapper {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+}
+
+#loadingScreen {
+  background: yellow;
+}
+
+#setupScreen {
+  background: lightblue;
+}
+
+#playScreen {
+  background: purple;
+}
