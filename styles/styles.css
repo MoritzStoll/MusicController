@@ -1,16 +1,14 @@
 html,
 body {
   height: 100%;
-  background: tomato;
+  background: lightcoral;
   margin: 0;
-  display: flex;
 }
 
 .screenWrapper {
   display: flex;
   flex: 1;
   height: 100%;
-  width: 100%;
 }
 
 #loadingScreen {
