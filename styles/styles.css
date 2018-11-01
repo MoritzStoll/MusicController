@@ -7,8 +7,39 @@ body {
 
 .screenWrapper {
   display: flex;
+  position: relative;
   flex: 1;
   height: 100%;
+}
+
+.controlScreens {
+  z-index: 2;
+  position: absolute;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.screenController {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 10px;
+  width: 100px;
+  height: 50px;
+  background: white;
+  opacity: 0.5;
+}
+
+.screenController:hover {
+  opacity: 0.7;
+}
+
+.screenController:active {
+  background: transparent;
 }
 
 #loadingScreen {
@@ -16,9 +47,38 @@ body {
 }
 
 #setupScreen {
+  justify-content: center;
+  align-items: center;
   background: lightblue;
 }
 
 #playScreen {
+  justify-content: center;
+  align-items: center;
   background: purple;
+}
+
+#dropdown {
+  display: none;
+  position: absolute;
+  top: 100px;
+  height: 200px;
+  width: 100px;
+  background: #fff;
+  opacity: 0.8;
+}
+
+.btn {
+  margin: 40px 10px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background: purple;
+  color: #fff;
+}
+
+.btn:hover {
+  opacity: 0.6;
+}
+.btn:active {
+  background: #fff;
 }
