@@ -48,8 +48,10 @@ class Gamepad {
 
     if (key.note) {
       console.log("play note: ", key.note);
+      //playSound(key.note);
     } else if (key.chord) {
       console.log("play chord: ", key.chord);
+      //playChord(key.chord);
     } else if (key.synthesizer) {
       console.log("call synthesizer function: ", key.synthesizer);
     }
@@ -87,7 +89,7 @@ class Gamepad {
 }
 
 var request = new XMLHttpRequest();
-request.open("GET", "/src/gamepad/gamepadMapping.json", true);
+request.open("GET", "/src/gamepad/gamepadMappingSimon.json", true);
 request.onload = function() {
   if (request.status >= 200 && request.status < 400) {
     new Gamepad(JSON.parse(request.responseText));

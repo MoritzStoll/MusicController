@@ -1,47 +1,32 @@
-let loadingScreen,
-  setupScreen,
-  playScreen,
-  nextScreen,
-  prevScreen,
-  actScreen,
-  loading;
+class ViewController {
+  constructor() {
+    this.loading = document.getElementById("loadingScreen");
+    this.main = document.getElementById("mainScreen");
+    this.button = document.getElementById("startStopButton");
+    this.dropdown = document.getElementById("dropdown");
+    this.state = 0;
+    this.init();
+  }
 
-function init() {
-  loadingScreen = document.getElementById("loadingScreen");
-  setupScreen = document.getElementById("setupScreen");
-  playScreen = document.getElementById("playScreen");
+  init() {
+    //for developmemt hide loading screen
+    this.state = 1;
 
-  nextScreen = document.getElementById("nextScreen");
-  prevScreen = document.getElementById("prevScreen");
+    this.button.addEventListener("click", () => this.startStop());
+    this.main.style.display = "flex";
+    this.loading.style.display = "none";
+  }
 
-  loadingScreen.style.display = "none";
-  setupScreen.style.display = "flex";
-  playScreen.style.display = "none";
-
-  //set controller to playscreen (hacked)
-  playScreen.innerHTML = setupScreen.innerHTML;
-
-  actScreen = 1; // because loading = false
-
-  nextScreen.addEventListener("click", () => {
-    if (actScreen < 2) {
-      actScreen++;
-      loadingScreen.style.display = "none";
-      setupScreen.style.display = "none";
-      playScreen.style.display = "flex";
+  startStop() {
+    if (this.state === 1) {
+      this.dropdown.style.display = "none";
+      this.button.innerHTML = "stop";
+      this.state = 2;
+    } else if (this.state === 2) {
+      this.button.innerHTML = "start";
+      this.state = 1;
     }
-    console.log("next");
-  });
-
-  prevScreen.addEventListener("click", () => {
-    if (actScreen > 0) {
-      actScreen--;
-      loadingScreen.style.display = "none";
-      setupScreen.style.display = "flex";
-      playScreen.style.display = "none";
-    }
-    console.log("prev");
-  });
+  }
 }
 
-init();
+new ViewController();
