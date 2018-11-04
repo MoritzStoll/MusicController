@@ -65,6 +65,7 @@ class Gamepad {
       playNote(key);
     } else if (key.chord) {
       console.log("play chord: ", key.chord);
+      playChord(key);
     } else if (key.synthesizer) {
       console.log("call synthesizer function: ", key.synthesizer);
     }
