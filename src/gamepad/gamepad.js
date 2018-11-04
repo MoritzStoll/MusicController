@@ -1,6 +1,7 @@
 class Gamepad {
   constructor(mapping) {
     this.mapping = mapping;
+    console.log(mapping.length)
     this.update = null;
     window.addEventListener("gamepadconnected", () => this.startGamepad());
     window.addEventListener("gamepaddisconnected", () => this.stopGamepad());
@@ -41,6 +42,18 @@ class Gamepad {
     this.update = requestAnimationFrame(() => this.loop());
   }
 
+  //Hier note wieder stoppem
+  releasedButton(key) {
+    if (key.note) {
+      console.log("play note: ", key.note);
+      stopNote(key);
+    } else if (key.chord) {
+      console.log("play chord: ", key.chord);
+    } else if (key.synthesizer) {
+      console.log("call synthesizer function: ", key.synthesizer);
+    }
+  }
+
   clickedButton(key) {
     key.element.setAttribute("style", `fill: ${key.playColor};`);
     setTimeout(() => {
@@ -49,6 +62,7 @@ class Gamepad {
 
     if (key.note) {
       console.log("play note: ", key.note);
+      playNote(key);
     } else if (key.chord) {
       console.log("play chord: ", key.chord);
     } else if (key.synthesizer) {
