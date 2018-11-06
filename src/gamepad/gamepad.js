@@ -38,6 +38,7 @@ class Gamepad {
     for (let i = 0; i < gp.buttons.length; i++) {
       let key = this.mapping.find(button => button.gamepadKeyIndex == i);
       if (gp.buttons[i].pressed) {
+        console.log(i);
         let buttonPressed = {
           button: gp.buttons[i],
           index: i
@@ -141,7 +142,7 @@ class Gamepad {
 }
 
 var request = new XMLHttpRequest();
-request.open("GET", "/src/gamepad/gamepadMappingSimon.json", true);
+request.open("GET", "/src/gamepad/gamepadMappingPS4.json", true);
 request.onload = function() {
   if (request.status >= 200 && request.status < 400) {
     new Gamepad(JSON.parse(request.responseText));
