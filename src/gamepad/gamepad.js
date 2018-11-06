@@ -1,11 +1,12 @@
 class Gamepad {
   constructor(mapping) {
     this.mapping = mapping;
-    console.log(mapping.length)
+    console.log(mapping.length);
     this.update = null;
     window.addEventListener("gamepadconnected", () => this.startGamepad());
     window.addEventListener("gamepaddisconnected", () => this.stopGamepad());
     this.initGamepad();
+    this.pressedButtons = [];
   }
 
   startGamepad() {
@@ -28,47 +29,49 @@ class Gamepad {
       return;
     }
     var gp = gamepads[0];
-    if (gp.buttons.some(button => button.pressed)) {
-      gp.buttons.forEach((button, i) => {
-        if (button.pressed) {
-          console.log(i)
+
+    let buttonCache = [];
+    for (let i = 0; i < this.pressedButtons.length; i++) {
+      buttonCache[i] = this.pressedButtons[i];
+    }
+    this.pressedButtons = [];
+
+    for (let i = 0; i < gp.buttons.length; i++) {
+      if (gp.buttons[i].pressed) {
+        let buttonPressed = {
+          button: gp.buttons[i],
+          index: i
+        };
+        this.pressedButtons.push(buttonPressed);
+        if (this.newPress(buttonPressed, buttonCache)) {
           let key = this.mapping.find(button => button.gamepadKeyIndex == i);
-          if (key) {
-            this.clickedButton(key);
-          }
+          playNote(key);
         }
-      });
+        console.log(this.newPress(buttonPressed, buttonCache));
+      }
     }
     this.update = requestAnimationFrame(() => this.loop());
   }
 
-  //Hier note wieder stoppem
-  releasedButton(key) {
-    if (key.note) {
-      console.log("play note: ", key.note);
-      stopNote(key);
-    } else if (key.chord) {
-      console.log("play chord: ", key.chord);
-    } else if (key.synthesizer) {
-      console.log("call synthesizer function: ", key.synthesizer);
-    }
-  }
+  newPress(button, buttonCache) {
+    var newPress = false;
 
-  clickedButton(key) {
-    key.element.setAttribute("style", `fill: ${key.playColor};`);
-    setTimeout(() => {
-      key.element.setAttribute("style", `fill: ${key.defaultColor};`);
-    }, 100);
-
-    if (key.note) {
-      console.log("play note: ", key.note);
-      playNote(key);
-    } else if (key.chord) {
-      console.log("play chord: ", key.chord);
-      playChord(key);
-    } else if (key.synthesizer) {
-      console.log("call synthesizer function: ", key.synthesizer);
+    // loop through pressed buttons
+    for (let i = 0; i < this.pressedButtons.length; i++) {
+      // if we found the button we're looking for...
+      if (this.pressedButtons[i].index == button.index) {
+        // set the boolean variable to true
+        newPress = true;
+        // loop through the cached states from the previous frame
+        for (let j = 0; j < buttonCache.length; j++) {
+          // if the button was already pressed, ignore new press
+          if (buttonCache[j].index == button.index) {
+            newPress = false;
+          }
+        }
+      }
     }
+    return newPress;
   }
 
   initGamepad() {
