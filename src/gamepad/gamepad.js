@@ -1,7 +1,6 @@
 class Gamepad {
   constructor(mapping) {
     this.mapping = mapping;
-    console.log(mapping.length);
     this.update = null;
     window.addEventListener("gamepadconnected", () => this.startGamepad());
     window.addEventListener("gamepaddisconnected", () => this.stopGamepad());
@@ -31,13 +30,10 @@ class Gamepad {
     var gp = gamepads[0];
 
     let buttonCache = [];
-    //console.log("Cleaned Button Cache")
     for (let i = 0; i < this.pressedButtons.length; i++) {
       buttonCache[i] = this.pressedButtons[i];
     }
-    //console.log("refilled buttonCache")
     this.pressedButtons = [];
-    //console.log("cleaner pressedButtons")
 
     for (let i = 0; i < gp.buttons.length; i++) {
       let key = this.mapping.find(button => button.gamepadKeyIndex == i);
@@ -73,7 +69,9 @@ class Gamepad {
   }
 
   startAction(key) {
-    if (key.note) {
+    if (key.id == "l2") {
+      receiveChord("c#");
+    } else if (key.note) {
       playNote(key);
     } else if (key.chord) {
       playChord(key);
