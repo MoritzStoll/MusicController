@@ -14,6 +14,7 @@ var playNote = key => {
 
 //braucht den kompletten key um den richtigen synth zu stoppen
 var stopNote = key => {
+  console.log("Stop", key);
   monoSynths[key.gamepadKeyIndex].triggerRelease();
 };
 
@@ -24,15 +25,11 @@ var playChord = key => {
   for (let i = 0; i < chord.length; i++) {
     playableChord = chord[i] + "2";
   }
-  polySynths[key.gamepadKeyIndex].triggerAttack(
-    playableChord,
-    Tone.Time()
-  );
+  polySynths[key.gamepadKeyIndex].triggerAttack(playableChord, Tone.Time());
 };
 
-
 var stopChord = key => {
-  console.log("Stop Chord")
+  console.log("Stop Chord");
 
   var chord = teoria.chord(key.chord).simple(); // Returns a Chord object, representing a Ab#5b9 chord
   console.log(chord);
@@ -41,5 +38,4 @@ var stopChord = key => {
     playableChord = chord[i] + "2";
   }
   polySynths[key.gamepadKeyIndex].triggerRelease(playableChord);
-
-}
+};

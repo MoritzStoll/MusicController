@@ -48,23 +48,15 @@ class Gamepad {
           this.startAction(key);
         }
       }
-
-      //Checking for Button-Up
     }
 
-    var cindex;
-    var pindex;
-    for (let i = 0; i < buttonCache.length; i++) {
-      cindex = buttonCache[i].index;
-      for (let j = 0; j < this.pressedButtons.length; j++) {
-        pindex = this.pressedButtons[j].index;
-      }
-      if (cindex != pindex) {
+    for (let m = 0; m < buttonCache.length; m++) {
+      var cindex = buttonCache[m].index;
+      if (!this.pressedButtons.find(button => button.index == cindex)) {
         let key = this.mapping.find(button => button.gamepadKeyIndex == cindex);
         this.stopAction(key);
       }
     }
-
     this.update = requestAnimationFrame(() => this.loop());
   }
 
