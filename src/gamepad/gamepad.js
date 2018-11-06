@@ -50,8 +50,8 @@ class Gamepad {
         this.pressedButtons.push(buttonPressed);
         
         if (this.newPress(buttonPressed, buttonCache)) {
-          playNote(key);
-          console.log("Button DOwn")
+          this.startAction(key);
+          
         } 
       }
 
@@ -69,14 +69,9 @@ class Gamepad {
       }
       if (cindex != pindex) {
         let key = this.mapping.find(button => button.gamepadKeyIndex == cindex)
-        stopNote(key)
+        this.stopAction(key)
       }
 
-      console.log({
-        "c-index" : cindex,
-        "p-index" : pindex,
-        "same" : cindex === pindex
-      })
     }
 
 
@@ -85,29 +80,22 @@ class Gamepad {
     this.update = requestAnimationFrame(() => this.loop());
   }
 
-
-  buttonUp(buttonCache,key) {
-    var buttonUp = false;
-
-    // loop through pressed buttons
-    for (let i = 0; i < buttonCache.length; i++) {
-      var button = i
-       for (let j = 0; j < this.pressedButtons.length; j++) {
-          // if the button was already pressed, ignore new press
-          console.log(this.pressedButtons[j].index == button.index);
-
-          if (!this.pressedButtons[j].index == button.index) {          
-            buttonUp = true;
-            stopNote(key)
-          } else {
-            console.log("cache", buttonCache)
-            console.log("pressed", this.pressedButtons)
-          }
-        }
-      }
-    
-
+  startAction(key) {
+    if(key.note) {
+      playNote(key);
+    } else if(key.chord) {
+      playChord(key);
+    }
   }
+
+  stopAction(key) {
+    if(key.note) {
+      stopNote(key);
+    } else if(key.chord) {
+      stopChord(key);
+    }
+  }
+
 
   newPress(button, buttonCache) {
     var newPress = false;

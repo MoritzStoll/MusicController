@@ -2,8 +2,8 @@
 var polySynths = [];
 var monoSynths = [];
 for (let i = 0; i < 16; i++) {
-  polySynths[i] = new Tone.PolySynth(3, Tone.MonoSynth).toMaster();
-  monoSynths[i] = new Tone.Synth().toMaster();
+  polySynths[i] = new Tone.PolySynth(3, Tone.AMSynth).toMaster();
+  monoSynths[i] = new Tone.AMSynth().toMaster();
 }
 
 var playNote = key => {
@@ -24,9 +24,22 @@ var playChord = key => {
   for (let i = 0; i < chord.length; i++) {
     playableChord = chord[i] + "2";
   }
-  polySynths[key.gamepadKeyIndex].triggerAttackRelease(
+  polySynths[key.gamepadKeyIndex].triggerAttack(
     playableChord,
-    "4n",
     Tone.Time()
   );
 };
+
+
+var stopChord = key => {
+  console.log("Stop Chord")
+
+  var chord = teoria.chord(key.chord).simple(); // Returns a Chord object, representing a Ab#5b9 chord
+  console.log(chord);
+  var playableChord = [];
+  for (let i = 0; i < chord.length; i++) {
+    playableChord = chord[i] + "2";
+  }
+  polySynths[key.gamepadKeyIndex].triggerRelease(playableChord);
+
+}
