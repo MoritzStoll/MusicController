@@ -1,7 +1,6 @@
 class Gamepad {
   constructor(mapping) {
     this.mapping = mapping;
-    console.log(mapping.length);
     this.update = null;
     window.addEventListener("gamepadconnected", () => this.startGamepad());
     window.addEventListener("gamepaddisconnected", () => this.stopGamepad());
@@ -31,14 +30,10 @@ class Gamepad {
     var gp = gamepads[0];
 
     let buttonCache = [];
-    //console.log("Cleaned Button Cache")
     for (let i = 0; i < this.pressedButtons.length; i++) {
       buttonCache[i] = this.pressedButtons[i];
     }
-    //console.log("refilled buttonCache")
     this.pressedButtons = [];
-    //console.log("cleaner pressedButtons")
-
 
     for (let i = 0; i < gp.buttons.length; i++) {
       let key = this.mapping.find(button => button.gamepadKeyIndex == i);
@@ -48,54 +43,42 @@ class Gamepad {
           index: i
         };
         this.pressedButtons.push(buttonPressed);
-        
+
         if (this.newPress(buttonPressed, buttonCache)) {
           this.startAction(key);
-          
-        } 
+        }
       }
-
-      //Checking for Button-Up
-             
     }
 
-   
-    var cindex;
-    var pindex;
-    for (let i = 0; i < buttonCache.length; i++) {
-      cindex = buttonCache[i].index;
-      for (let j = 0; j < this.pressedButtons.length; j++) {
-        pindex = this.pressedButtons[j].index;
+    for (let m = 0; m < buttonCache.length; m++) {
+      var cindex = buttonCache[m].index;
+      if (!this.pressedButtons.find(button => button.index == cindex)) {
+        let key = this.mapping.find(button => button.gamepadKeyIndex == cindex);
+        this.stopAction(key);
       }
-      if (cindex != pindex) {
-        let key = this.mapping.find(button => button.gamepadKeyIndex == cindex)
-        this.stopAction(key)
-      }
-
     }
-
-
-
-
     this.update = requestAnimationFrame(() => this.loop());
   }
 
   startAction(key) {
-    if(key.note) {
+    key.element.setAttribute("style", `fill: ${key.playColor};`);
+    if (key.id == "l2") {
+      receiveChord("c#");
+    } else if (key.note) {
       playNote(key);
-    } else if(key.chord) {
+    } else if (key.chord) {
       playChord(key);
     }
   }
 
   stopAction(key) {
-    if(key.note) {
+    key.element.setAttribute("style", `fill: ${key.defaultColor};`);
+    if (key.note) {
       stopNote(key);
-    } else if(key.chord) {
+    } else if (key.chord) {
       stopChord(key);
     }
   }
-
 
   newPress(button, buttonCache) {
     var newPress = false;
@@ -150,7 +133,7 @@ class Gamepad {
 }
 
 var request = new XMLHttpRequest();
-request.open("GET", "/src/gamepad/gamepadMapping.json", true);
+request.open("GET", "/src/gamepad/gamepadMappingPS4.json", true);
 request.onload = function() {
   if (request.status >= 200 && request.status < 400) {
     new Gamepad(JSON.parse(request.responseText));

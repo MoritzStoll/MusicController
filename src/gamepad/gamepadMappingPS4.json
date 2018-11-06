@@ -23,8 +23,8 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": null,
-    "chord": "C",
+    "note": "d",
+    "chord": null,
     "synthesizer": null
   },
   {
@@ -37,7 +37,7 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "G",
+    "note": "e",
     "chord": null,
     "synthesizer": null
   },
@@ -65,8 +65,8 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": null,
-    "chord": "G",
+    "note": "c#",
+    "chord": null,
     "synthesizer": null
   },
   {
@@ -79,8 +79,8 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": null,
-    "chord": "Am",
+    "note": "c#",
+    "chord": null,
     "synthesizer": null
   },
   {
@@ -149,27 +149,13 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "c",
-    "chord": null,
-    "synthesizer": null
-  },
-  {
-    "element": null,
-    "id": "buttonRight",
-    "index": null,
-    "status": 0,
-    "gamepadKeyIndex": 2,
-    "defaultColor": "#629ACC",
-    "setupColor": "#fff",
-    "readyColor": null,
-    "playColor": "purple",
     "note": "d",
     "chord": null,
     "synthesizer": null
   },
   {
     "element": null,
-    "id": "buttonDown",
+    "id": "buttonRight",
     "index": null,
     "status": 0,
     "gamepadKeyIndex": 1,
@@ -183,7 +169,7 @@
   },
   {
     "element": null,
-    "id": "buttonLeft",
+    "id": "buttonDown",
     "index": null,
     "status": 0,
     "gamepadKeyIndex": 0,
@@ -197,6 +183,20 @@
   },
   {
     "element": null,
+    "id": "buttonLeft",
+    "index": null,
+    "status": 0,
+    "gamepadKeyIndex": 2,
+    "defaultColor": "#629ACC",
+    "setupColor": "#fff",
+    "readyColor": null,
+    "playColor": "purple",
+    "note": "g",
+    "chord": null,
+    "synthesizer": null
+  },
+  {
+    "element": null,
     "id": "option",
     "index": null,
     "status": 0,
@@ -205,7 +205,7 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "g",
+    "note": "c#",
     "chord": null,
     "synthesizer": null
   },
