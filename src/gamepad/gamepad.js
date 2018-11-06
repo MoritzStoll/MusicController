@@ -69,6 +69,7 @@ class Gamepad {
   }
 
   startAction(key) {
+    key.element.setAttribute("style", `fill: ${key.playColor};`);
     if (key.id == "l2") {
       receiveChord("c#");
     } else if (key.note) {
@@ -79,6 +80,7 @@ class Gamepad {
   }
 
   stopAction(key) {
+    key.element.setAttribute("style", `fill: ${key.defaultColor};`);
     if (key.note) {
       stopNote(key);
     } else if (key.chord) {
