@@ -15,8 +15,8 @@ var playing = false;
 var currentChords = undefined;
 
 // Sample over chord progression.
-const playOnce = () => {
-  const chords = currentChords;
+const playOnce = (sound) => {
+  const chords = sound;
   
   // Prime with root note of the first chord.
   const root = mm.chords.ChordSymbols.root(chords[0]);
