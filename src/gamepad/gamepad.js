@@ -38,7 +38,6 @@ class Gamepad {
     for (let i = 0; i < gp.buttons.length; i++) {
       let key = this.mapping.find(button => button.gamepadKeyIndex == i);
       if (gp.buttons[i].pressed) {
-        console.log(i);
         let buttonPressed = {
           button: gp.buttons[i],
           index: i
