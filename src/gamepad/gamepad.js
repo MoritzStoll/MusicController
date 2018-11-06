@@ -31,26 +31,82 @@ class Gamepad {
     var gp = gamepads[0];
 
     let buttonCache = [];
+    //console.log("Cleaned Button Cache")
     for (let i = 0; i < this.pressedButtons.length; i++) {
       buttonCache[i] = this.pressedButtons[i];
     }
+    //console.log("refilled buttonCache")
     this.pressedButtons = [];
+    //console.log("cleaner pressedButtons")
+
 
     for (let i = 0; i < gp.buttons.length; i++) {
+      let key = this.mapping.find(button => button.gamepadKeyIndex == i);
       if (gp.buttons[i].pressed) {
         let buttonPressed = {
           button: gp.buttons[i],
           index: i
         };
         this.pressedButtons.push(buttonPressed);
+        
         if (this.newPress(buttonPressed, buttonCache)) {
-          let key = this.mapping.find(button => button.gamepadKeyIndex == i);
           playNote(key);
-        }
-        console.log(this.newPress(buttonPressed, buttonCache));
+          console.log("Button DOwn")
+        } 
       }
+
+      //Checking for Button-Up
+             
     }
+
+   
+    var cindex;
+    var pindex;
+    for (let i = 0; i < buttonCache.length; i++) {
+      cindex = buttonCache[i].index;
+      for (let j = 0; j < this.pressedButtons.length; j++) {
+        pindex = this.pressedButtons[j].index;
+      }
+      if (cindex != pindex) {
+        let key = this.mapping.find(button => button.gamepadKeyIndex == cindex)
+        stopNote(key)
+      }
+
+      console.log({
+        "c-index" : cindex,
+        "p-index" : pindex,
+        "same" : cindex === pindex
+      })
+    }
+
+
+
+
     this.update = requestAnimationFrame(() => this.loop());
+  }
+
+
+  buttonUp(buttonCache,key) {
+    var buttonUp = false;
+
+    // loop through pressed buttons
+    for (let i = 0; i < buttonCache.length; i++) {
+      var button = i
+       for (let j = 0; j < this.pressedButtons.length; j++) {
+          // if the button was already pressed, ignore new press
+          console.log(this.pressedButtons[j].index == button.index);
+
+          if (!this.pressedButtons[j].index == button.index) {          
+            buttonUp = true;
+            stopNote(key)
+          } else {
+            console.log("cache", buttonCache)
+            console.log("pressed", this.pressedButtons)
+          }
+        }
+      }
+    
+
   }
 
   newPress(button, buttonCache) {
