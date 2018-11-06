@@ -39,7 +39,6 @@ class Gamepad {
     this.pressedButtons = [];
     //console.log("cleaner pressedButtons")
 
-
     for (let i = 0; i < gp.buttons.length; i++) {
       let key = this.mapping.find(button => button.gamepadKeyIndex == i);
       if (gp.buttons[i].pressed) {
@@ -48,18 +47,15 @@ class Gamepad {
           index: i
         };
         this.pressedButtons.push(buttonPressed);
-        
+
         if (this.newPress(buttonPressed, buttonCache)) {
           this.startAction(key);
-          
-        } 
+        }
       }
 
       //Checking for Button-Up
-             
     }
 
-   
     var cindex;
     var pindex;
     for (let i = 0; i < buttonCache.length; i++) {
@@ -68,34 +64,29 @@ class Gamepad {
         pindex = this.pressedButtons[j].index;
       }
       if (cindex != pindex) {
-        let key = this.mapping.find(button => button.gamepadKeyIndex == cindex)
-        this.stopAction(key)
+        let key = this.mapping.find(button => button.gamepadKeyIndex == cindex);
+        this.stopAction(key);
       }
-
     }
-
-
-
 
     this.update = requestAnimationFrame(() => this.loop());
   }
 
   startAction(key) {
-    if(key.note) {
+    if (key.note) {
       playNote(key);
-    } else if(key.chord) {
+    } else if (key.chord) {
       playChord(key);
     }
   }
 
   stopAction(key) {
-    if(key.note) {
+    if (key.note) {
       stopNote(key);
-    } else if(key.chord) {
+    } else if (key.chord) {
       stopChord(key);
     }
   }
-
 
   newPress(button, buttonCache) {
     var newPress = false;
