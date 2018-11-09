@@ -6,6 +6,8 @@ class Gamepad {
     window.addEventListener("gamepaddisconnected", () => this.stopGamepad());
     this.initGamepad();
     this.pressedButtons = [];
+    this.kiPressed = false;
+    this.kiNote;
   }
 
   startGamepad() {
@@ -63,9 +65,16 @@ class Gamepad {
   startAction(key) {
     key.element.setAttribute("style", `fill: ${key.playColor};`);
     if (key.id == "l2") {
-      receiveChord("c#");
+      this.kiPressed = true;
+
     } else if (key.note) {
-      playNote(key);
+      if (this.kiPressed && !this.kiNote) {
+        var note = teoria.note(key.note + '4').midi();
+        this.kiNote = note;
+        humanKeyDown(this.kiNote);
+      } else {
+        playNote(key);
+      }
     } else if (key.chord) {
       playChord(key);
     }
@@ -73,8 +82,11 @@ class Gamepad {
 
   stopAction(key) {
     key.element.setAttribute("style", `fill: ${key.defaultColor};`);
-    if (key.note) {
-      stopNote(key);
+    if (key.id =="l2") {
+      humanKeyUp(this.kiNote);
+    }
+    else if (key.note) {
+        stopNote(key);
     } else if (key.chord) {
       stopChord(key);
     }
