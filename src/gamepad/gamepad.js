@@ -84,6 +84,7 @@ class Gamepad {
     key.element.setAttribute("style", `fill: ${key.defaultColor};`);
     if (key.id =="l2") {
       humanKeyUp(this.kiNote);
+      this.kiNote = null;
     }
     else if (key.note) {
         stopNote(key);
