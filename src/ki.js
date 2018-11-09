@@ -297,15 +297,6 @@ builtInKeyboard.up(note => humanKeyUp(note.note));
 
 // Temperature control
 
-let tempSlider = new mdc.slider.MDCSlider(
-  document.querySelector('#temperature')
-);
-tempSlider.listen('MDCSlider:change', () => (temperature = tempSlider.value));
-document
-  .querySelector('#pattern-length')
-  .addEventListener('change', evt => (patternLength = evt.target.value));
-
-// Pulse pattern switch
 
 let pulsePatternControl = new mdc.switchControl.MDCSwitch(
   document.querySelector('.mdc-switch')

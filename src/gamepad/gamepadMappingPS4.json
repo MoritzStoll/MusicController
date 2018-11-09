@@ -65,8 +65,8 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "c#",
-    "chord": null,
+    "note": null,
+    "chord": "AM",
     "synthesizer": null
   },
   {
@@ -79,8 +79,8 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "c#",
-    "chord": null,
+    "note": null,
+    "chord": "G",
     "synthesizer": null
   },
   {
