@@ -149,8 +149,8 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "d",
-    "chord": null,
+    "note": null,
+    "chord": "C",
     "synthesizer": null
   },
   {
@@ -163,8 +163,8 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "e",
-    "chord": null,
+    "note": null,
+    "chord": "G",
     "synthesizer": null
   },
   {
@@ -178,7 +178,7 @@
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": "dm",
+    "chord": "Am",
     "synthesizer": null
   },
   {
@@ -191,8 +191,8 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "g",
-    "chord": null,
+    "note": null,
+    "chord": "F",
     "synthesizer": null
   },
   {

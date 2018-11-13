@@ -38,7 +38,7 @@ var piano = new Tone.Sampler(
 ).toMaster();
 
 function playPianoNote(note) {
-  piano.triggerAttack(note + "5");
+  piano.triggerAttack(note + "4");
 }
 
 function stopPianoNote(note) {
@@ -46,14 +46,12 @@ function stopPianoNote(note) {
 }
 
 function playPianoChord(chord) {
-  console.log("start chord", chord);
   chord.forEach(note => {
     piano.triggerAttack(note + "4");
   });
 }
 
 function stopPianoChord(chord) {
-  console.log("stop chord");
   chord.forEach(note => {
     //piano.triggerRelease(note);
   });
