@@ -137,13 +137,19 @@ function start() {
   return generatePattern(seed, state.patternLength - seed.length).then(
     result => {
       state.pattern = toNoteSequence(result);
-      console.log(state.pattern);
-      player.start(state.pattern, 120).then(() => {
-        console.log("playing beat");
-      });
-      //onPatternUpdated(); //??????
+      divideSequence(state.pattern);
     }
   );
+}
+
+let divideSequences = [[],[],[],[],[],[],[],[],[]];
+function divideSequence(sequence) {
+  for (let i = 0; i < sequence.notes.length; i++) {
+    divideSequences[reverseMidiMapping.get[sequence.notes[i].pitch]] = sequence.notes[i];
+  }
+  console.log(divideSequences);
+
+
 }
 
 function generatePattern(seed, length) {
