@@ -144,15 +144,18 @@ function start() {
       console.log(result)
       state.pattern = toNoteSequence(result);
 
-      console.log("Pattern", state.pattern)
-      //console.log(oneEighth = Tone.Time("8n").toSeconds())
+      var notes = state.pattern.notes;
+      var endTime = notes[notes.length - 1].endTime
+      var startTime = notes[0].startTime
+      console.log(startTime)
       
       state.pattern.notes.forEach((note, i) => {
-        drumKit[reverseMidiMapping.get(note.pitch)].get('high').start(state.pattern.notes[i].startTime)
-        drumKit[reverseMidiMapping.get(note.pitch)].get('high').loop = true
-        
+        var player = drumKit[reverseMidiMapping.get(note.pitch)].get('high');
+        player.setLoopPoints(startTime, endTime);
+        player.start(state.pattern.notes[i].startTime)
+        player.loop = true;  
       });
-
+      
     }
   );
 }
