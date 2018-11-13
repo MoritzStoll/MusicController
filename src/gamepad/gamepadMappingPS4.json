@@ -9,7 +9,7 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "c#",
+    "note": "c5#",
     "chord": null,
     "synthesizer": null
   },
@@ -23,7 +23,7 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "d",
+    "note": "d3",
     "chord": null,
     "synthesizer": null
   },
@@ -37,7 +37,7 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "e",
+    "note": "e6",
     "chord": null,
     "synthesizer": null
   },
@@ -51,7 +51,7 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "c#",
+    "note": "c4",
     "chord": null,
     "synthesizer": null
   },
@@ -65,7 +65,7 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "c#",
+    "note": "e5",
     "chord": "c5e5f5",
     "synthesizer": null
   },
@@ -79,7 +79,7 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "c#",
+    "note": "f5#",
     "chord": null,
     "synthesizer": null
   },
@@ -177,8 +177,8 @@
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
-    "note": "f",
-    "chord": null,
+    "note": null,
+    "chord": "dm",
     "synthesizer": null
   },
   {

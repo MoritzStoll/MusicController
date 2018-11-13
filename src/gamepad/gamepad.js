@@ -24,8 +24,8 @@ class Gamepad {
     var gamepads = navigator.getGamepads
       ? navigator.getGamepads()
       : navigator.webkitGetGamepads
-        ? navigator.webkitGetGamepads
-        : [];
+      ? navigator.webkitGetGamepads
+      : [];
     if (!gamepads) {
       return;
     }
@@ -66,30 +66,28 @@ class Gamepad {
     key.element.setAttribute("style", `fill: ${key.playColor};`);
     if (key.id == "l2") {
       this.kiPressed = true;
-
     } else if (key.note) {
       if (this.kiPressed && !this.kiNote) {
-        var note = teoria.note(key.note + '4').midi();
+        var note = teoria.note(key.note + "4").midi();
         this.kiNote = note;
         humanKeyDown(this.kiNote);
       } else {
-        playNote(key);
+        playNote(key.note);
       }
     } else if (key.chord) {
-      playChord(key);
+      playChord(key.chord);
     }
   }
 
   stopAction(key) {
     key.element.setAttribute("style", `fill: ${key.defaultColor};`);
-    if (key.id =="l2") {
+    if (key.id == "l2") {
       humanKeyUp(this.kiNote);
       this.kiNote = null;
-    }
-    else if (key.note) {
-        stopNote(key);
+    } else if (key.note) {
+      stopNote(key.note);
     } else if (key.chord) {
-      stopChord(key);
+      stopChord(key.chord);
     }
   }
 
