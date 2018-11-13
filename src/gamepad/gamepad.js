@@ -1,144 +1,159 @@
-class Gamepad {
-  constructor(mapping) {
-    this.mapping = mapping;
-    this.update = null;
-    window.addEventListener("gamepadconnected", () => this.startGamepad());
-    window.addEventListener("gamepaddisconnected", () => this.stopGamepad());
-    this.initGamepad();
-    this.pressedButtons = [];
+let mapping, update, pressedbuttons;
+
+update = null;
+window.addEventListener("gamepadconnected", () => startGamepad());
+window.addEventListener("gamepaddisconnected", () => stopGamepad());
+pressedButtons = [];
+
+initGamepad();
+
+async function initGamepad() {
+  mapping = await loadMapping();
+  mapping.forEach((key, index) => {
+    let element = document.getElementById(key.id);
+    addListener(element, index);
+    mapping[index].element = element;
+  });
+}
+
+function loadMapping() {
+  return new Promise(mapping => {
+    let request = new XMLHttpRequest();
+    let result;
+    request.open("GET", "/src/gamepad/gamepadMappingPS4.json", true);
+    request.onload = () => {
+      if (request.status >= 200 && request.status < 400) {
+        mapping(JSON.parse(request.responseText));
+      } else {
+        console.log("reached target server but return error");
+      }
+    };
+    request.send();
+  });
+}
+
+function startGamepad() {
+  console.log("gamepad connected");
+  update = requestAnimationFrame(() => loop());
+}
+
+function stopGamepad() {
+  console.log("gamepad disconnected");
+  cancelAnimationFrame(update);
+}
+
+function loop() {
+  var gamepads = navigator.getGamepads
+    ? navigator.getGamepads()
+    : navigator.webkitGetGamepads
+    ? navigator.webkitGetGamepads
+    : [];
+  if (!gamepads) {
+    return;
   }
+  var gp = gamepads[0];
 
-  startGamepad() {
-    console.log("gamepad connected");
-    this.update = requestAnimationFrame(() => this.loop());
+  let buttonCache = [];
+  for (let i = 0; i < pressedButtons.length; i++) {
+    buttonCache[i] = pressedButtons[i];
   }
+  pressedButtons = [];
 
-  stopGamepad() {
-    console.log("gamepad disconnected");
-    cancelAnimationFrame(this.update);
-  }
+  for (let i = 0; i < gp.buttons.length; i++) {
+    let key = mapping.find(button => button.gamepadKeyIndex == i);
+    if (gp.buttons[i].pressed) {
+      let buttonPressed = {
+        button: gp.buttons[i],
+        index: i
+      };
+      pressedButtons.push(buttonPressed);
 
-  loop() {
-    var gamepads = navigator.getGamepads
-      ? navigator.getGamepads()
-      : navigator.webkitGetGamepads
-        ? navigator.webkitGetGamepads
-        : [];
-    if (!gamepads) {
-      return;
-    }
-    var gp = gamepads[0];
-
-    let buttonCache = [];
-    for (let i = 0; i < this.pressedButtons.length; i++) {
-      buttonCache[i] = this.pressedButtons[i];
-    }
-    this.pressedButtons = [];
-
-    for (let i = 0; i < gp.buttons.length; i++) {
-      let key = this.mapping.find(button => button.gamepadKeyIndex == i);
-      if (gp.buttons[i].pressed) {
-        let buttonPressed = {
-          button: gp.buttons[i],
-          index: i
-        };
-        this.pressedButtons.push(buttonPressed);
-
-        if (this.newPress(buttonPressed, buttonCache)) {
-          this.startAction(key);
-        }
+      if (newPress(buttonPressed, buttonCache)) {
+        startAction(key);
       }
     }
-
-    for (let m = 0; m < buttonCache.length; m++) {
-      var cindex = buttonCache[m].index;
-      if (!this.pressedButtons.find(button => button.index == cindex)) {
-        let key = this.mapping.find(button => button.gamepadKeyIndex == cindex);
-        this.stopAction(key);
-      }
-    }
-    this.update = requestAnimationFrame(() => this.loop());
   }
 
-  startAction(key) {
-    key.element.setAttribute("style", `fill: ${key.playColor};`);
-    if (key.id == "l2") {
-      receiveChord("c#");
-    } else if (key.note) {
-      playNote(key);
-    } else if (key.chord) {
-      playChord(key);
+  for (let m = 0; m < buttonCache.length; m++) {
+    var cindex = buttonCache[m].index;
+    if (!pressedButtons.find(button => button.index == cindex)) {
+      let key = mapping.find(button => button.gamepadKeyIndex == cindex);
+      stopAction(key);
     }
   }
+  update = requestAnimationFrame(() => loop());
+}
 
-  stopAction(key) {
-    key.element.setAttribute("style", `fill: ${key.defaultColor};`);
-    if (key.note) {
-      stopNote(key);
-    } else if (key.chord) {
-      stopChord(key);
-    }
-  }
-
-  newPress(button, buttonCache) {
-    var newPress = false;
-
-    // loop through pressed buttons
-    for (let i = 0; i < this.pressedButtons.length; i++) {
-      // if we found the button we're looking for...
-      if (this.pressedButtons[i].index == button.index) {
-        // set the boolean variable to true
-        newPress = true;
-        // loop through the cached states from the previous frame
-        for (let j = 0; j < buttonCache.length; j++) {
-          // if the button was already pressed, ignore new press
-          if (buttonCache[j].index == button.index) {
-            newPress = false;
-          }
-        }
-      }
-    }
-    return newPress;
-  }
-
-  initGamepad() {
-    this.mapping.forEach((key, index) => {
-      let element = document.getElementById(key.id);
-      this.addListener(element, index);
-      this.mapping[index].element = element;
-    });
-  }
-
-  addListener(button, index) {
-    button.addEventListener("click", () => {
-      let key = this.mapping[index];
-      switch (key.status) {
-        case 0:
-          this.changeButtonColor(key.element, key.setupColor);
-          openDropdown(key);
-          break;
-        case 1:
-          console.log("run action for: ", key.id);
-          break;
-        case 2:
-          console.log("play action for: ", key.id);
-          break;
-      }
-    });
-  }
-
-  changeButtonColor(el, color) {
-    el.setAttribute("style", `fill: ${color};`);
+function startAction(key) {
+  key.element.setAttribute("style", `fill: ${key.playColor};`);
+  if (key.id == "l2") {
+    receiveChord("c#");
+  } else if (key.note) {
+    playNote(key);
+  } else if (key.chord) {
+    playChord(key);
   }
 }
 
-var request = new XMLHttpRequest();
-request.open("GET", "/src/gamepad/gamepadMappingPS4.json", true);
-request.onload = function() {
-  if (request.status >= 200 && request.status < 400) {
-    new Gamepad(JSON.parse(request.responseText));
-  } else {
-    console.log("reached target server but return error");
+function stopAction(key) {
+  key.element.setAttribute("style", `fill: ${key.defaultColor};`);
+  if (key.note) {
+    stopNote(key);
+  } else if (key.chord) {
+    stopChord(key);
   }
-};
-request.send();
+}
+
+function newPress(button, buttonCache) {
+  var newPress = false;
+
+  // loop through pressed buttons
+  for (let i = 0; i < pressedButtons.length; i++) {
+    // if we found the button we're looking for...
+    if (pressedButtons[i].index == button.index) {
+      // set the boolean variable to true
+      newPress = true;
+      // loop through the cached states from the previous frame
+      for (let j = 0; j < buttonCache.length; j++) {
+        // if the button was already pressed, ignore new press
+        if (buttonCache[j].index == button.index) {
+          newPress = false;
+        }
+      }
+    }
+  }
+  return newPress;
+}
+
+function addListener(button, index) {
+  button.addEventListener("click", () => {
+    let key = mapping[index];
+    switch (key.status) {
+      case 0:
+        changeButtonColor(key.element, key.setupColor);
+        openDropdown(key);
+        break;
+      case 1:
+        console.log("run action for: ", key.id);
+        break;
+      case 2:
+        console.log("play action for: ", key.id);
+        break;
+    }
+  });
+}
+
+function changeButtonColor(el, color) {
+  el.setAttribute("style", `fill: ${color};`);
+}
+
+function setSound(type, sound, btn) {
+  let i = mapping.findIndex(button => (button.id = btn.id));
+  if (type === "chord") {
+    mapping[i].chord = sound;
+    mapping[i].note = null;
+  } else {
+    mapping[i].sound = sound;
+    mapping[i].note = null;
+  }
+}
