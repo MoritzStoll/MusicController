@@ -8,14 +8,17 @@ for (let i = 0; i < 16; i++) {
 
 var playNote = key => {
   console.log("GamePad: " + key.gamepadKeyIndex);
+
+  playPianoNote(key.note);
   //Sobald Release Button eingebauzt ist nur noch Attack
-  monoSynths[key.gamepadKeyIndex].triggerAttack(key.note + "4", Tone.Time());
+  //monoSynths[key.gamepadKeyIndex].triggerAttack(key.note + "4", Tone.Time());
 };
 
 //braucht den kompletten key um den richtigen synth zu stoppen
 var stopNote = key => {
   console.log("Stop", key);
-  monoSynths[key.gamepadKeyIndex].triggerRelease();
+  // monoSynths[key.gamepadKeyIndex].triggerRelease();
+  stopPianoNote(key.note);
 };
 
 var playChord = key => {
@@ -25,7 +28,7 @@ var playChord = key => {
   for (let i = 0; i < chord.length; i++) {
     playableChord = chord[i] + "2";
   }
-  polySynths[key.gamepadKeyIndex].triggerAttack(playableChord, Tone.Time());
+  //polySynths[key.gamepadKeyIndex].triggerAttack(playableChord, Tone.Time());
 };
 
 var stopChord = key => {
@@ -37,5 +40,5 @@ var stopChord = key => {
   for (let i = 0; i < chord.length; i++) {
     playableChord = chord[i] + "2";
   }
-  polySynths[key.gamepadKeyIndex].triggerRelease(playableChord);
+  //polySynths[key.gamepadKeyIndex].triggerRelease(playableChord);
 };

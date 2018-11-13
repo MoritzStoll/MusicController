@@ -71,6 +71,14 @@ let reverseMidiMapping = new Map([
 let snarePanner = new Tone.Panner().connect(reverb);
 new Tone.LFO(0.13, -0.25, 0.25).connect(snarePanner.pan).start();
 
+let outputs = {
+  internal: {
+    play: (drumIdx, velocity, time) => {
+      drumKit[drumIdx].get(velocity).start(time);
+    }
+  }
+};
+
 let drumKit = [
   new Tone.Players({
     high: `${sampleBaseUrl}/808-kick-vh.mp3`,
@@ -137,93 +145,48 @@ function start() {
   return generatePattern(seed, state.patternLength - seed.length).then(
     result => {
       state.pattern = toNoteSequence(result);
-      state.pattern = divideSequence(state.pattern);
+      //state.pattern = divideSequence(state.pattern);
 
-      state.pattern.forEach(element => {
-        element = toDividedNoteSequence(element);
-      });
-
-      console.log(state.pattern)
+      // state.pattern.forEach((element, i) => {
+      //   state.pattern[i] = toDividedNoteSequence(element);
+      // });
+      console.log(state.pattern);
+      drumKit[0].get("high").start(state.pattern[0], 120);
     }
   );
 }
 
-
 function divideSequence(sequence) {
-  var divideSequences = [[],[],[],[],[],[],[],[],[]];
+  var divideSequences = [[], [], [], [], [], [], [], [], []];
   for (let i = 0; i < sequence.notes.length; i++) {
-    //console.log(reverseMidiMapping.get(sequence.notes[i].pitch))
-    divideSequences[reverseMidiMapping.get(sequence.notes[i].pitch)].push(sequence.notes[i]);
+    divideSequences[reverseMidiMapping.get(sequence.notes[i].pitch)].push(
+      sequence.notes[i]
+    );
   }
   return divideSequences;
 }
 
-
-function play() {
-  
-}
+function play() {}
 
 function generatePattern(seed, length) {
   let seedSeq = toNoteSequence(seed);
-  console.log(seedSeq);
   return rnn
     .continueSequence(seedSeq, length, temperature)
     .then(r => seed.concat(fromNoteSequence(r, length)));
 }
 
-function toDividedNoteSequence(pattern) {
-  return mm.sequences.quantizeNoteSequence(
-    {
-      ticksPerQuarter: 220,
-      totalTime: pattern.length / 2,
-      timeSignatures: [
-        {
-          time: 0,
-          numerator: 4,
-          denominator: 4
-        }
-      ],
-      tempos: [
-        {
-          time: 0,
-          qpm: 120
-        }
-      ],
-      notes: pattern
-    },
-    1
-  );
-}
-
-
 function toNoteSequence(pattern) {
-  return mm.sequences.quantizeNoteSequence(
-    {
-      ticksPerQuarter: 220,
-      totalTime: pattern.length / 2,
-      timeSignatures: [
-        {
-          time: 0,
-          numerator: 4,
-          denominator: 4
-        }
-      ],
-      tempos: [
-        {
-          time: 0,
-          qpm: 120
-        }
-      ],
-      notes: _.flatMap(pattern, (step, index) =>
-        step.map(d => ({
-          pitch: midiDrums[d],
-          startTime: index * 0.5,
-          endTime: (index + 1) * 0.5
-        }))
-      )
-    },
-    1
-  );
+  return {
+    quantizationInfo: { stepsPerQuarter: 4 },
+    notes: _.flatMap(pattern, (step, index) =>
+      step.map(d => ({
+        pitch: midiDrums[d],
+        startTime: index * 0.5,
+        endTime: (index + 1) * 0.5
+      }))
+    ),
+    totalQuantizedSteps: 1
+  };
 }
 
 function fromNoteSequence(seq, patternLength) {
