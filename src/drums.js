@@ -136,27 +136,31 @@ function start() {
   let seed = _.take(state.pattern, state.seedLength);
   return generatePattern(seed, state.patternLength - seed.length).then(
     result => {
-      console.log("Result ",result)
       state.pattern = toNoteSequence(result);
-      divideSequence(state.pattern);
+      state.pattern = divideSequence(state.pattern);
+
+      state.pattern.forEach(element => {
+        element = toDividedNoteSequence(element);
+      });
+
+      console.log(state.pattern)
     }
   );
 }
 
-let divideSequences = [[],[],[],[],[],[],[],[],[]];
+
 function divideSequence(sequence) {
+  var divideSequences = [[],[],[],[],[],[],[],[],[]];
   for (let i = 0; i < sequence.notes.length; i++) {
     //console.log(reverseMidiMapping.get(sequence.notes[i].pitch))
     divideSequences[reverseMidiMapping.get(sequence.notes[i].pitch)].push(sequence.notes[i]);
   }
-  console.log(divideSequences);
+  return divideSequences;
 }
 
 
 function play() {
-  for (let i = 0; i < divideSequences.length; i++) {
-    drumKit[i].play()
-  }
+  
 }
 
 function generatePattern(seed, length) {
@@ -166,6 +170,31 @@ function generatePattern(seed, length) {
     .continueSequence(seedSeq, length, temperature)
     .then(r => seed.concat(fromNoteSequence(r, length)));
 }
+
+function toDividedNoteSequence(pattern) {
+  return mm.sequences.quantizeNoteSequence(
+    {
+      ticksPerQuarter: 220,
+      totalTime: pattern.length / 2,
+      timeSignatures: [
+        {
+          time: 0,
+          numerator: 4,
+          denominator: 4
+        }
+      ],
+      tempos: [
+        {
+          time: 0,
+          qpm: 120
+        }
+      ],
+      notes: pattern
+    },
+    1
+  );
+}
+
 
 function toNoteSequence(pattern) {
   return mm.sequences.quantizeNoteSequence(
