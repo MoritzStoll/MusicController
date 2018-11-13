@@ -136,6 +136,7 @@ function start() {
   let seed = _.take(state.pattern, state.seedLength);
   return generatePattern(seed, state.patternLength - seed.length).then(
     result => {
+      console.log("Result ",result)
       state.pattern = toNoteSequence(result);
       divideSequence(state.pattern);
     }
@@ -145,11 +146,17 @@ function start() {
 let divideSequences = [[],[],[],[],[],[],[],[],[]];
 function divideSequence(sequence) {
   for (let i = 0; i < sequence.notes.length; i++) {
-    divideSequences[reverseMidiMapping.get[sequence.notes[i].pitch]] = sequence.notes[i];
+    //console.log(reverseMidiMapping.get(sequence.notes[i].pitch))
+    divideSequences[reverseMidiMapping.get(sequence.notes[i].pitch)].push(sequence.notes[i]);
   }
   console.log(divideSequences);
+}
 
 
+function play() {
+  for (let i = 0; i < divideSequences.length; i++) {
+    drumKit[i].play()
+  }
 }
 
 function generatePattern(seed, length) {
