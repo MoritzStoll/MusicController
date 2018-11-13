@@ -128,17 +128,19 @@ let state = {
   patternLength: 32,
   seedLength: 4,
   swing: 0.55,
-  pattern: [[0], [], [2], []].concat(_.times(32, i => [])), //35 columns
+  pattern: [[0, 1, 2], [], [2], []].concat(_.times(32, i => [])), //35 columns
   tempo: 120
 };
-
 start();
 function start() {
   let seed = _.take(state.pattern, state.seedLength);
   return generatePattern(seed, state.patternLength - seed.length).then(
     result => {
-      state.pattern = result;
+      state.pattern = toNoteSequence(result);
       console.log(state.pattern);
+      player.start(state.pattern, 120).then(() => {
+        console.log("playing beat");
+      });
       //onPatternUpdated(); //??????
     }
   );
@@ -146,6 +148,7 @@ function start() {
 
 function generatePattern(seed, length) {
   let seedSeq = toNoteSequence(seed);
+  console.log(seedSeq);
   return rnn
     .continueSequence(seedSeq, length, temperature)
     .then(r => seed.concat(fromNoteSequence(r, length)));
