@@ -1,19 +1,21 @@
-let mapping, update, pressedbuttons;
+let mapping, update, pressedbuttons, storage;
 
 update = null;
-window.addEventListener("gamepadconnected", () => startGamepad());
-window.addEventListener("gamepaddisconnected", () => stopGamepad());
 pressedButtons = [];
+storage = window.localStorage;
 
 initGamepad();
 
 async function initGamepad() {
-  mapping = await loadMapping();
+  localMapping = JSON.parse(localStorage.getItem("gamepadMapping"));
+  mapping = localMapping || (await loadMapping());
   mapping.forEach((key, index) => {
     let element = document.getElementById(key.id);
     addListener(element, index);
     mapping[index].element = element;
   });
+  window.addEventListener("gamepadconnected", () => startGamepad());
+  window.addEventListener("gamepaddisconnected", () => stopGamepad());
 }
 
 function loadMapping() {
@@ -60,7 +62,7 @@ function loop() {
   pressedButtons = [];
 
   for (let i = 0; i < gp.buttons.length; i++) {
-    let key = mapping.find(button => button.gamepadKeyIndex == i);
+    let x = mapping.find(button => button.gamepadKeyIndex == i);
     if (gp.buttons[i].pressed) {
       let buttonPressed = {
         button: gp.buttons[i],
@@ -69,7 +71,7 @@ function loop() {
       pressedButtons.push(buttonPressed);
 
       if (newPress(buttonPressed, buttonCache)) {
-        startAction(key);
+        startAction(x);
       }
     }
   }
@@ -87,20 +89,22 @@ function loop() {
 function startAction(key) {
   key.element.setAttribute("style", `fill: ${key.playColor};`);
   if (key.id == "l2") {
-    receiveChord("c#");
-  } else if (key.note) {
-    playNote(key);
-  } else if (key.chord) {
-    playChord(key);
+    //receiveChord("c#");
+  }
+  if (key.note) {
+    playNote(key.note.sound + key.note.octaveNumber);
+  }
+  if (key.chord) {
+    playChord(key.chord.sound, key.chord.octaveNumber);
   }
 }
 
 function stopAction(key) {
   key.element.setAttribute("style", `fill: ${key.defaultColor};`);
   if (key.note) {
-    stopNote(key);
+    //stopNote(key);
   } else if (key.chord) {
-    stopChord(key);
+    //stopChord(key);
   }
 }
 
@@ -128,18 +132,8 @@ function newPress(button, buttonCache) {
 function addListener(button, index) {
   button.addEventListener("click", () => {
     let key = mapping[index];
-    switch (key.status) {
-      case 0:
-        changeButtonColor(key.element, key.setupColor);
-        openDropdown(key);
-        break;
-      case 1:
-        console.log("run action for: ", key.id);
-        break;
-      case 2:
-        console.log("play action for: ", key.id);
-        break;
-    }
+    changeButtonColor(key.element, key.setupColor);
+    openDropdown(key);
   });
 }
 
@@ -147,13 +141,15 @@ function changeButtonColor(el, color) {
   el.setAttribute("style", `fill: ${color};`);
 }
 
-function setSound(type, sound, btn) {
-  let i = mapping.findIndex(button => (button.id = btn.id));
+function setSound(type, sound, octaveNumber, btn) {
+  let i = mapping.findIndex(button => button.id === btn.id);
   if (type === "chord") {
-    mapping[i].chord = sound;
+    mapping[i].chord = { sound, octaveNumber };
     mapping[i].note = null;
   } else {
-    mapping[i].sound = sound;
-    mapping[i].note = null;
+    mapping[i].note = { sound, octaveNumber };
+    mapping[i].chord = null;
   }
+  let gamepad = JSON.stringify(mapping);
+  localStorage.setItem("gamepadMapping", gamepad);
 }

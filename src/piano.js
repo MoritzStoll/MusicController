@@ -1,14 +1,33 @@
+WHITE_KEYS = 21;
+BLACK_KEYS = 15;
+MIN_OCTAVE = 3;
+MAX_OCTAVE = 5;
+let keys = [...document.getElementById("piano").children];
+let white = keys.slice(0, 21);
+let black = keys.slice(21, keys.length);
+let notesWhite = ["C", "D", "E", "F", "G", "A", "B"];
+let notesBlack = ["C#", "D#", "F#", "G#", "A#"];
+
+white.reverse();
+black.reverse();
+
+console.log(white);
+
+for (let i = MIN_OCTAVE; i <= MAX_OCTAVE; i++) {
+  white.forEach((key, index) => {
+    key.id = notesWhite[index % 7] + i;
+  });
+  black.forEach((key, index) => {
+    key.id = notesBlack[index % 5] + i;
+  });
+  white.splice(0, 7);
+  black.splice(0, 5);
+}
+keys.forEach(key => {
+  key.addEventListener("click", () => playNote(key.id));
+});
 var piano = new Tone.Sampler(
   {
-    A0: "A0.[mp3|ogg]",
-    C1: "C1.[mp3|ogg]",
-    "D#1": "Ds1.[mp3|ogg]",
-    "F#1": "Fs1.[mp3|ogg]",
-    A1: "A1.[mp3|ogg]",
-    C2: "C2.[mp3|ogg]",
-    "D#2": "Ds2.[mp3|ogg]",
-    "F#2": "Fs2.[mp3|ogg]",
-    A2: "A2.[mp3|ogg]",
     C3: "C3.[mp3|ogg]",
     "D#3": "Ds3.[mp3|ogg]",
     "F#3": "Fs3.[mp3|ogg]",
@@ -20,16 +39,7 @@ var piano = new Tone.Sampler(
     C5: "C5.[mp3|ogg]",
     "D#5": "Ds5.[mp3|ogg]",
     "F#5": "Fs5.[mp3|ogg]",
-    A5: "A5.[mp3|ogg]",
-    C6: "C6.[mp3|ogg]",
-    "D#6": "Ds6.[mp3|ogg]",
-    "F#6": "Fs6.[mp3|ogg]",
-    A6: "A6.[mp3|ogg]",
-    C7: "C7.[mp3|ogg]",
-    "D#7": "Ds7.[mp3|ogg]",
-    "F#7": "Fs7.[mp3|ogg]",
-    A7: "A7.[mp3|ogg]",
-    C8: "C8.[mp3|ogg]"
+    A5: "A5.[mp3|ogg]"
   },
   {
     release: 1,
@@ -37,17 +47,23 @@ var piano = new Tone.Sampler(
   }
 ).toMaster();
 
-function playPianoNote(note) {
-  piano.triggerAttack(note + "4");
+function playNote(note) {
+  let key = document.getElementById(note);
+  key.style.opacity = 0.5;
+  piano.triggerAttack(note);
+  setTimeout(() => {
+    key.style.opacity = 1;
+  }, 100);
 }
 
 function stopPianoNote(note) {
   //piano.triggerRelease(note + "5");
 }
 
-function playPianoChord(chord) {
-  chord.forEach(note => {
-    piano.triggerAttack(note + "4");
+function playChord(chord, octaveNumber) {
+  var c = teoria.chord(chord).simple();
+  c.forEach(note => {
+    playNote(note.toUpperCase() + octaveNumber);
   });
 }
 
