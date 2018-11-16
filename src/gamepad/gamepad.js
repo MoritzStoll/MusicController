@@ -65,16 +65,20 @@ class Gamepad {
   startAction(key) {
     key.element.setAttribute("style", `fill: ${key.playColor};`);
     if (key.id == "l2") {
-      this.kiPressed = true;
-
-    } else if (key.note) {
-      if (this.kiPressed && !this.kiNote) {
-        var note = teoria.note(key.note + '4').midi();
-        this.kiNote = note;
-        humanKeyDown(this.kiNote);
+      if(this.kiPressed) {
+        stopDrums();
+        this.kiPressed = false;
       } else {
-        playNote(key);
+        this.kiPressed = true;
+        playDrums();
+      
       }
+      
+    } else if (key.note) {
+     
+      
+      playNote(key);
+      
     } else if (key.chord) {
       playChord(key);
     }
@@ -83,8 +87,7 @@ class Gamepad {
   stopAction(key) {
     key.element.setAttribute("style", `fill: ${key.defaultColor};`);
     if (key.id =="l2") {
-      humanKeyUp(this.kiNote);
-      this.kiNote = null;
+      
     }
     else if (key.note) {
         stopNote(key);

@@ -126,39 +126,65 @@ let rnn = new mm.MusicRNN(
 
 
 
-
+let seeds = [
+  //[[0,5,7],[2],[0,5,8],[2]],
+  //[[1],[1,0],[1,8],[1,0]],
+  //[[0],[6],[0,6],[1,5]],
+  [[0],[1],[6],[3]]
+]
 
 let state = {
-  patternLength: 32,
+  patternLength: 31,
   seedLength: 4,
   swing: 0.55,
-  pattern: [[0], [1], [2], [4, 5]].concat(_.times(31, i => [])), //35 columns
+  pattern: null, //35 columns
   tempo: 120
 };
 
 start();
 function start() {
+  randomValue = (Math.floor(Math.random() * seeds.length))
+  console.log(randomValue)
+  state.pattern = seeds[randomValue].concat(_.times(31, i => []));
+
   let seed = _.take(state.pattern, state.seedLength);
   return generatePattern(seed, state.patternLength - seed.length).then(
     result => {
       console.log(result)
       state.pattern = toNoteSequence(result);
 
-      var notes = state.pattern.notes;
-      var endTime = notes[notes.length - 1].endTime
-      var startTime = notes[0].startTime
-      console.log(startTime)
       
-      state.pattern.notes.forEach((note, i) => {
-        var player = drumKit[reverseMidiMapping.get(note.pitch)].get('high');
-        player.setLoopPoints(startTime, endTime);
-        player.start(state.pattern.notes[i].startTime)
-        player.loop = true;  
-      });
+      
+     
       
     }
   );
 }
+
+function playDrums() {
+  var notes = state.pattern.notes;
+  var endTime = notes[notes.length - 1].endTime
+  var startTime = notes[0].startTime
+  console.log("StartTime: ", startTime)
+  console.log("EndTime: ", endTime)
+  console.log(state.pattern)
+
+  state.pattern.notes.forEach((note, i) => {
+    var player = drumKit[reverseMidiMapping.get(note.pitch)].get('med');
+    player.setLoopPoints(startTime, endTime);
+    player.start(state.pattern.notes[i].startTime)
+    player.loop = true;  
+  });
+}
+
+function stopDrums() {
+  console.log("Stop Beat")
+  state.pattern.notes.forEach((note, i) => {
+    var player = drumKit[reverseMidiMapping.get(note.pitch)].get('med');
+    player.stop(state.pattern.notes[i].startTime)
+  });
+}
+
 
 
 function generatePattern(seed, length) {
@@ -173,7 +199,7 @@ function generatePattern(seed, length) {
 function toNoteSequence(pattern) {
   return mm.sequences.quantizeNoteSequence(
     {
-      ticksPerQuarter: 220,
+      ticksPerQuarter: 120,
       totalTime: pattern.length / 2,
       timeSignatures: [
         {
@@ -191,8 +217,8 @@ function toNoteSequence(pattern) {
       notes: _.flatMap(pattern, (step, index) =>
         step.map(d => ({
           pitch: midiDrums[d],
-          startTime: index * 0.25,
-          endTime: (index + 1) * 0.25
+          startTime: index * 0.5,
+          endTime: (index + 1) * 0.5
         }))
       )
     },
