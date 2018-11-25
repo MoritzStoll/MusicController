@@ -132,14 +132,12 @@ let rnn = new mm.MusicRNN(
   "https://storage.googleapis.com/download.magenta.tensorflow.org/tfjs_checkpoints/music_rnn/drum_kit_rnn"
 );
 
-
-
 let seeds = [
   //[[0,5,7],[2],[0,5,8],[2]],
   //[[1],[1,0],[1,8],[1,0]],
   //[[0],[6],[0,6],[1,5]],
-  [[0],[1],[6],[3]]
-]
+  [[0], [1], [6], [3]]
+];
 
 let state = {
   patternLength: 31,
@@ -151,49 +149,43 @@ let state = {
 
 start();
 function start() {
-  randomValue = (Math.floor(Math.random() * seeds.length))
-  console.log(randomValue)
+  randomValue = Math.floor(Math.random() * seeds.length);
+  console.log(randomValue);
   state.pattern = seeds[randomValue].concat(_.times(31, i => []));
 
   let seed = _.take(state.pattern, state.seedLength);
   return generatePattern(seed, state.patternLength - seed.length).then(
     result => {
-      console.log(result)
+      console.log(result);
       state.pattern = toNoteSequence(result);
-
-
-
-
-
+      playDrums();
     }
   );
 }
 
 function playDrums() {
   var notes = state.pattern.notes;
-  var endTime = notes[notes.length - 1].endTime
-  var startTime = notes[0].startTime
-  console.log("StartTime: ", startTime)
-  console.log("EndTime: ", endTime)
-  console.log(state.pattern)
+  var endTime = notes[notes.length - 1].endTime;
+  var startTime = notes[0].startTime;
+  console.log("StartTime: ", startTime);
+  console.log("EndTime: ", endTime);
+  console.log(state.pattern);
 
   state.pattern.notes.forEach((note, i) => {
-    var player = drumKit[reverseMidiMapping.get(note.pitch)].get('med');
+    var player = drumKit[reverseMidiMapping.get(note.pitch)].get("med");
     player.setLoopPoints(startTime, endTime);
-    player.start(state.pattern.notes[i].startTime)
+    player.start(state.pattern.notes[i].startTime);
     player.loop = true;
   });
 }
 
 function stopDrums() {
-  console.log("Stop Beat")
+  console.log("Stop Beat");
   state.pattern.notes.forEach((note, i) => {
-    var player = drumKit[reverseMidiMapping.get(note.pitch)].get('med');
-    player.stop(state.pattern.notes[i].startTime)
+    var player = drumKit[reverseMidiMapping.get(note.pitch)].get("med");
+    player.stop(state.pattern.notes[i].startTime);
   });
 }
-
-
 
 function generatePattern(seed, length) {
   let seedSeq = toNoteSequence(seed);
@@ -201,7 +193,6 @@ function generatePattern(seed, length) {
     .continueSequence(seedSeq, length, temperature)
     .then(r => seed.concat(fromNoteSequence(r, length)));
 }
-
 
 function toNoteSequence(pattern) {
   return mm.sequences.quantizeNoteSequence(
