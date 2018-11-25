@@ -5,6 +5,7 @@ let reverb = new Tone.Convolver(
 ).toMaster();
 reverb.wet.value = 0.35;
 
+let ready = false;
 const TIME_HUMANIZATION = 0.01;
 
 let midiDrums = [36, 38, 42, 46, 41, 43, 45, 49, 51];
@@ -136,75 +137,27 @@ let rnn = new mm.MusicRNN(
 );
 
 rnn.initialize().then(() => {
+  ready = true;
   stopLoading();
-  console.log("ready");
+  start();
 });
-
-let seeds = [
-  //[[0,5,7],[2],[0,5,8],[2]],
-  //[[1],[1,0],[1,8],[1,0]],
-  //[[0],[6],[0,6],[1,5]],
-  [[0], [], [2], []]
-];
 
 let state = {
   patternLength: 32,
   seedLength: 4,
   swing: 0.55,
   pattern: null, //35 columns
-  tempo: 120
+  tempo: 120,
+  startSeed: [[0], [], [2], []]
 };
 
-start();
 function start() {
-  //randomValue = Math.floor(Math.random() * seeds.length);
-  var example = [
-    [0],
-    [],
-    [2],
-    [],
-    [],
-    [],
-    [1, 2],
-    [],
-    [0],
-    [],
-    [2],
-    [],
-    [],
-    [],
-    [1, 2],
-    [],
-    [0],
-    [],
-    [2],
-    [],
-    [],
-    [],
-    [1, 2],
-    [],
-    [0],
-    [],
-    [2],
-    [],
-    [],
-    [],
-    [1, 2],
-    []
-  ];
-
-  state.pattern = seeds[0].concat(_.times(state.patternLength, i => []));
-  //console.log("Pattern ", state.pattern)
+  state.pattern = state.startSeed.concat(_.times(state.patternLength, i => []));
   let seed = _.take(state.pattern, state.seedLength);
-
-  //state.pattern = toNoteSequence(example);
-
   return generatePattern(seed, state.patternLength - seed.length).then(
     result => {
-      console.log("Generated Result", result);
       var sequence = toNoteSequence(result);
       state.pattern = fromNoteSequence(sequence, state.patternLength);
-      console.log("Generated Pattern", state.pattern);
     }
   );
 }
@@ -245,12 +198,11 @@ function tick(time = Tone.now() - Tone.context.lookAhead) {
 }
 
 var clock = new Tone.Clock(function(time) {
-  console.log(time);
   tick();
 }, 4);
 
 function playDrums() {
-  clock.start();
+  ready && clock.start();
 }
 
 function stopDrums() {
@@ -258,7 +210,6 @@ function stopDrums() {
 }
 
 function generatePattern(seed, length) {
-  console.log("Patternlength", length);
   let seedSeq = toNoteSequence(seed);
   return rnn
     .continueSequence(seedSeq, length, temperature)
