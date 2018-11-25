@@ -24,7 +24,7 @@ function loadMapping() {
     let result;
     request.open(
       "GET",
-      "MusicController/src/gamepad/gamepadMappingPS4.json",
+      "/MusicController/src/gamepad/gamepadMappingPS4.json",
       true
     );
     request.onload = () => {
