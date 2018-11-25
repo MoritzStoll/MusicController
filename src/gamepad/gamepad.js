@@ -22,11 +22,7 @@ function loadMapping() {
   return new Promise(mapping => {
     let request = new XMLHttpRequest();
     let result;
-    request.open(
-      "GET",
-      "/MusicController/src/gamepad/gamepadMappingPS4.json",
-      true
-    );
+    request.open("GET", "/src/gamepad/gamepadMappingPS4.json", true);
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
         mapping(JSON.parse(request.responseText));
