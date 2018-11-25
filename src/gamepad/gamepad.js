@@ -90,6 +90,7 @@ function startAction(key) {
   key.element.setAttribute("style", `fill: ${key.playColor};`);
   if (key.id == "l2") {
     //receiveChord("c#");
+    playDrums();
   }
   if (key.note) {
     playNote(key.note.sound + key.note.octaveNumber);

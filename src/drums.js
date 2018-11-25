@@ -169,7 +169,7 @@ function start() {
       var sequence = toNoteSequence(result);
       state.pattern = fromNoteSequence(sequence, state.patternLength)
       console.log("Generated Pattern", state.pattern)
-      playDrums()
+      
   
     }
   );
@@ -206,16 +206,18 @@ function tick(time = Tone.now() - Tone.context.lookAhead) {
     drums.forEach(d => {
       let humanizedTime = stepIdx === 0 ? time : humanizeTime(time);
       outputs["internal"].play(d, velocity, humanizedTime);
-      //visualizePlay(humanizedTime, stepIdx, d);
     });
   }
 }
 
 function playDrums() {
-  setInterval(() => {
-    console.log("4n")
-    tick()
-  }, 250);
+  var clock = new Tone.Clock(function(time){
+    console.log(time);
+    tick();
+  }, 4);
+
+  clock.start();
+ 
   
   /*console.log(state.pattern)
   var notes = state.pattern.notes;
