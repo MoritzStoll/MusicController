@@ -210,36 +210,17 @@ function tick(time = Tone.now() - Tone.context.lookAhead) {
   }
 }
 
+var clock = new Tone.Clock(function(time){
+  console.log(time);
+  tick();
+}, 4);
+
 function playDrums() {
-  var clock = new Tone.Clock(function(time){
-    console.log(time);
-    tick();
-  }, 4);
-
   clock.start();
- 
-  
-  /*console.log(state.pattern)
-  var notes = state.pattern.notes;
-  var endTime = notes[notes.length - 1].endTime;
-  var startTime = notes[0].startTime;
-  console.log("StartTime: ", startTime);
-  console.log("EndTime: ", endTime);
-
-  state.pattern.notes.forEach((note, i) => {
-    var player = drumKit[reverseMidiMapping.get(note.pitch)].get("med");
-    //player.setLoopPoints(startTime, endTime);
-    player.start(state.pattern.notes[i].startTime);
-    //player.loop = true;
-  });*/
 }
 
 function stopDrums() {
-  console.log("Stop Beat");
-  state.pattern.notes.forEach((note, i) => {
-    var player = drumKit[reverseMidiMapping.get(note.pitch)].get("med");
-    player.stop(state.pattern.notes[i].startTime);
-  });
+  clock.stop();
 }
 
 function generatePattern(seed, length) {

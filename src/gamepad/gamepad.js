@@ -86,11 +86,19 @@ function loop() {
   update = requestAnimationFrame(() => loop());
 }
 
-function startAction(key) {
+let beatPlays = false;
+function startAction(key, gp) {
   key.element.setAttribute("style", `fill: ${key.playColor};`);
   if (key.id == "l2") {
     //receiveChord("c#");
-    playDrums();
+    if (beatPlays) {
+      stopDrums();
+      beatPlays = false;
+    } else {
+      playDrums();
+      beatPlays = true;
+    }
+    
   }
   if (key.note) {
     playNote(key.note.sound + key.note.octaveNumber);
@@ -98,6 +106,9 @@ function startAction(key) {
   if (key.chord) {
     playChord(key.chord.sound, key.chord.octaveNumber);
   }
+
+
+
 }
 
 function stopAction(key) {
