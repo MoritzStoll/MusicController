@@ -26,6 +26,10 @@ for (let i = MIN_OCTAVE; i <= MAX_OCTAVE; i++) {
 keys.forEach(key => {
   key.addEventListener("click", () => playNote(key.id));
 });
+
+
+var pianoGain = new Tone.Gain();
+pianoGain.toMaster();
 var piano = new Tone.Sampler(
   {
     C3: "C3.[mp3|ogg]",
@@ -45,7 +49,8 @@ var piano = new Tone.Sampler(
     release: 1,
     baseUrl: "./src/salamander/"
   }
-).toMaster();
+).connect(pianoGain);
+
 
 function playNote(note) {
   let key = document.getElementById(note);

@@ -65,10 +65,10 @@ function loop() {
     let x = mapping.find(button => button.gamepadKeyIndex == i);
     if (gp.buttons[i].pressed) {
 
-      if(x.id == "joystickLeft") {
-        console.log("Calling change Volume")
-        changeVolume(gp.axes[1])
-      }
+
+      changeVolume(gp.axes[1])
+      console.log(pianoGain.gain.value)
+  
       
       let buttonPressed = {
         button: gp.buttons[i],
