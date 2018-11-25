@@ -64,6 +64,12 @@ function loop() {
   for (let i = 0; i < gp.buttons.length; i++) {
     let x = mapping.find(button => button.gamepadKeyIndex == i);
     if (gp.buttons[i].pressed) {
+
+      if(x.id == "joystickLeft") {
+        console.log("Calling change Volume")
+        changeVolume(gp.axes[1])
+      }
+      
       let buttonPressed = {
         button: gp.buttons[i],
         index: i
@@ -87,7 +93,7 @@ function loop() {
 }
 
 let beatPlays = false;
-function startAction(key, gp) {
+function startAction(key) {
   key.element.setAttribute("style", `fill: ${key.playColor};`);
   if (key.id == "l2") {
     //receiveChord("c#");
