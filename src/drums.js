@@ -158,7 +158,6 @@ function start() {
     result => {
       console.log(result);
       state.pattern = toNoteSequence(result);
-      playDrums();
     }
   );
 }
