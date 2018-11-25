@@ -30,6 +30,10 @@ keys.forEach(key => {
 
 var pianoGain = new Tone.Gain();
 pianoGain.toMaster();
+
+var tremolo = new Tone.Tremolo(9, 0.75).connect(pianoGain);
+tremolo.start()
+
 var piano = new Tone.Sampler(
   {
     C3: "C3.[mp3|ogg]",
@@ -49,7 +53,7 @@ var piano = new Tone.Sampler(
     release: 1,
     baseUrl: "./src/salamander/"
   }
-).connect(pianoGain);
+).connect(tremolo);
 
 
 function playNote(note) {

@@ -61,15 +61,13 @@ function loop() {
   }
   pressedButtons = [];
 
+  changeVolume(gp.axes[1])
+  changeTremolo(gp.axes[3])
+
   for (let i = 0; i < gp.buttons.length; i++) {
     let x = mapping.find(button => button.gamepadKeyIndex == i);
     if (gp.buttons[i].pressed) {
 
-
-      changeVolume(gp.axes[1])
-      console.log(pianoGain.gain.value)
-  
-      
       let buttonPressed = {
         button: gp.buttons[i],
         index: i
