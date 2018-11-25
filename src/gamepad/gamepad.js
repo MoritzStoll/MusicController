@@ -22,7 +22,11 @@ function loadMapping() {
   return new Promise(mapping => {
     let request = new XMLHttpRequest();
     let result;
-    request.open("GET", "/src/gamepad/gamepadMappingPS4.json", true);
+    request.open(
+      "GET",
+      "MusicController/src/gamepad/gamepadMappingPS4.json",
+      true
+    );
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
         mapping(JSON.parse(request.responseText));
@@ -61,13 +65,12 @@ function loop() {
   }
   pressedButtons = [];
 
-  changeVolume(gp.axes[1])
-  changeTremolo(gp.axes[3])
+  changeVolume(gp.axes[1]);
+  changeTremolo(gp.axes[3]);
 
   for (let i = 0; i < gp.buttons.length; i++) {
     let x = mapping.find(button => button.gamepadKeyIndex == i);
     if (gp.buttons[i].pressed) {
-
       let buttonPressed = {
         button: gp.buttons[i],
         index: i
@@ -102,7 +105,6 @@ function startAction(key) {
       playDrums();
       beatPlays = true;
     }
-    
   }
   if (key.note) {
     playNote(key.note.sound + key.note.octaveNumber);
@@ -110,9 +112,6 @@ function startAction(key) {
   if (key.chord) {
     playChord(key.chord.sound, key.chord.octaveNumber);
   }
-
-
-
 }
 
 function stopAction(key) {
