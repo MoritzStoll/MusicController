@@ -55,32 +55,37 @@ function loop() {
   }
   var gp = gamepads[0];
 
-  let buttonCache = [];
-  for (let i = 0; i < pressedButtons.length; i++) {
-    buttonCache[i] = pressedButtons[i];
-  }
-  pressedButtons = [];
+  startAction(key) {
+    key.element.setAttribute("style", `fill: ${key.playColor};`);
+    if (key.id == "l2") {
+      if(this.kiPressed) {
+        stopDrums();
+        this.kiPressed = false;
+      } else {
+        this.kiPressed = true;
+        playDrums();
 
-  for (let i = 0; i < gp.buttons.length; i++) {
-    let x = mapping.find(button => button.gamepadKeyIndex == i);
-    if (gp.buttons[i].pressed) {
-      let buttonPressed = {
-        button: gp.buttons[i],
-        index: i
-      };
-      pressedButtons.push(buttonPressed);
-
-      if (newPress(buttonPressed, buttonCache)) {
-        startAction(x);
       }
+
+    } else if (key.note) {
+
+
+      playNote(key);
+
+    } else if (key.chord) {
+      playChord(key);
     }
   }
 
-  for (let m = 0; m < buttonCache.length; m++) {
-    var cindex = buttonCache[m].index;
-    if (!pressedButtons.find(button => button.index == cindex)) {
-      let key = mapping.find(button => button.gamepadKeyIndex == cindex);
-      stopAction(key);
+  stopAction(key) {
+    key.element.setAttribute("style", `fill: ${key.defaultColor};`);
+    if (key.id =="l2") {
+
+    }
+    else if (key.note) {
+        stopNote(key);
+    } else if (key.chord) {
+      stopChord(key);
     }
   }
   update = requestAnimationFrame(() => loop());
