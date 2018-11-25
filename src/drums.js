@@ -4,6 +4,10 @@ let reverb = new Tone.Convolver(
   `${sampleBaseUrl}/small-drum-room.wav`
 ).toMaster();
 reverb.wet.value = 0.35;
+
+const TIME_HUMANIZATION = 0.01;
+
+
 let midiDrums = [36, 38, 42, 46, 41, 43, 45, 49, 51];
 let reverseMidiMapping = new Map([
   [36, 0],
@@ -136,11 +140,11 @@ let seeds = [
   //[[0,5,7],[2],[0,5,8],[2]],
   //[[1],[1,0],[1,8],[1,0]],
   //[[0],[6],[0,6],[1,5]],
-  [[0], [1], [6], [3]]
+  [[0], [], [2], []]
 ];
 
 let state = {
-  patternLength: 31,
+  patternLength: 32,
   seedLength: 4,
   swing: 0.55,
   pattern: null, //35 columns
@@ -149,34 +153,83 @@ let state = {
 
 start();
 function start() {
-  randomValue = Math.floor(Math.random() * seeds.length);
-  console.log(randomValue);
-  state.pattern = seeds[randomValue].concat(_.times(31, i => []));
-
+  //randomValue = Math.floor(Math.random() * seeds.length);
+  var example = [[0],[],[2],[],[],[],[1, 2],[],[0],[],[2],[],[],[],[1, 2],[],[0],[],[2],[],[],[],[1, 2],[],[0],[],[2],[],[],[],[1, 2],[]]
+  
+  state.pattern = seeds[0].concat(_.times(state.patternLength, i => []));
+  //console.log("Pattern ", state.pattern)
   let seed = _.take(state.pattern, state.seedLength);
+  
+
+  //state.pattern = toNoteSequence(example);
+  
   return generatePattern(seed, state.patternLength - seed.length).then(
     result => {
-      console.log(result);
-      state.pattern = toNoteSequence(result);
-      playDrums();
+      console.log("Generated Result", result);
+      var sequence = toNoteSequence(result);
+      state.pattern = fromNoteSequence(sequence, state.patternLength)
+      console.log("Generated Pattern", state.pattern)
+      playDrums()
+  
     }
   );
 }
 
+function humanizeTime(time) {
+  return time - TIME_HUMANIZATION / 2 + Math.random() * TIME_HUMANIZATION;
+}
+
+function getStepVelocity(step) {
+  if (step % 4 === 0) {
+    return "high";
+  } else if (step % 2 === 0) {
+    return "med";
+  } else {
+    return "low";
+  }
+}
+
+let stepCounter = 0;
+let oneEighth = Tone.Time("8n").toSeconds();
+
+function tick(time = Tone.now() - Tone.context.lookAhead) {
+  if (_.isNumber(stepCounter) && state.pattern) {
+    stepCounter++;
+
+    let stepIdx = stepCounter % state.pattern.length;
+    let isSwung = stepIdx % 2 !== 0;
+    if (isSwung) {
+      time += (state.swing - 0.5) * oneEighth;
+    }
+    let velocity = getStepVelocity(stepIdx);
+    let drums = state.pattern[stepIdx];
+    drums.forEach(d => {
+      let humanizedTime = stepIdx === 0 ? time : humanizeTime(time);
+      outputs["internal"].play(d, velocity, humanizedTime);
+      //visualizePlay(humanizedTime, stepIdx, d);
+    });
+  }
+}
+
 function playDrums() {
+  setInterval(() => {
+    console.log("4n")
+    tick()
+  }, 250);
+  
+  /*console.log(state.pattern)
   var notes = state.pattern.notes;
   var endTime = notes[notes.length - 1].endTime;
   var startTime = notes[0].startTime;
   console.log("StartTime: ", startTime);
   console.log("EndTime: ", endTime);
-  console.log(state.pattern);
 
   state.pattern.notes.forEach((note, i) => {
     var player = drumKit[reverseMidiMapping.get(note.pitch)].get("med");
-    player.setLoopPoints(startTime, endTime);
+    //player.setLoopPoints(startTime, endTime);
     player.start(state.pattern.notes[i].startTime);
-    player.loop = true;
-  });
+    //player.loop = true;
+  });*/
 }
 
 function stopDrums() {
@@ -188,6 +241,7 @@ function stopDrums() {
 }
 
 function generatePattern(seed, length) {
+  console.log("Patternlength", length)
   let seedSeq = toNoteSequence(seed);
   return rnn
     .continueSequence(seedSeq, length, temperature)
