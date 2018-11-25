@@ -13,10 +13,6 @@ black.reverse();
 
 console.log(white);
 
-
-var pianoGain = Tone.Gain(1)
-pianoGain.toMaster();
-
 for (let i = MIN_OCTAVE; i <= MAX_OCTAVE; i++) {
   white.forEach((key, index) => {
     key.id = notesWhite[index % 7] + i;
@@ -49,7 +45,7 @@ var piano = new Tone.Sampler(
     release: 1,
     baseUrl: "./src/salamander/"
   }
-).connect(pianoGain);
+).toMaster();
 
 function playNote(note) {
   let key = document.getElementById(note);
