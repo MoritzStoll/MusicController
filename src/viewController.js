@@ -5,5 +5,5 @@ function stopLoading() {
   loading.style.opacity = 0;
   setTimeout(() => {
     loading.style.visibility = "hidden";
-  }, 300);
+  }, 500);
 }

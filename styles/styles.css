@@ -24,7 +24,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: opacity 300ms linear;
+  transition: opacity 500ms linear;
   z-index: 1000;
   opacity: 1;
 }
@@ -107,28 +107,26 @@ body {
   transition: opacity 300ms ease-in-out;
 }
 
-#dropdown {
+#modal {
   -webkit-overflow-scrolling: touch;
   position: absolute;
   z-index: 2;
   top: 100px;
-  max-height: 300px;
   overflow: auto;
   opacity: 0;
   display: flex;
   flex-direction: column;
   padding: 5px;
-  background: #fff;
   transition: all 300ms ease-in-out;
 }
 
-#dropdown > li {
+#modal > li {
   display: flex;
   flex: 1;
   justify-content: center;
   align-items: center;
   margin: 5px 0;
-  padding: 10px 30px;
+  padding: 5px 30px;
   background: pink;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   font-size: 1.2em;
@@ -137,7 +135,7 @@ body {
   color: #fff;
 }
 
-#dropdown > li:hover {
+#modal > li:hover {
   background: rosybrown;
 }
 
@@ -156,13 +154,44 @@ body {
   background: #fff;
 }
 
-.loading {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  top: calc(50% - 30px);
-  height: 250px;
-  text-align: center;
-  color: white;
-  font-size: 40px;
+.col {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.pattern {
+  display: flex;
+  width: 200px;
+  height: 300px;
+  flex-wrap: nowrap;
+}
+
+.pad {
+  flex: 1;
+  background: lightslategray;
+  height: 20px;
+  margin: 1px;
+}
+
+.pad:hover {
+  opacity: 0.5;
+}
+
+.patternBtn {
+  padding: 20px 30px;
+  background: #304e75;
+  margin-top: 30px;
+  text-transform: uppercase;
+  color: lightblue;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  font-weight: bold;
+}
+
+.patternBtn:hover {
+  opacity: 0.8;
+}
+
+.patternBtn:active {
+  opacity: 0;
 }

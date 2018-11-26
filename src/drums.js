@@ -253,3 +253,12 @@ function fromNoteSequence(seq, patternLength) {
   }
   return res;
 }
+
+function setSeedPattern(pattern) {
+  state.startSeed = pattern;
+  start();
+}
+
+function getSeedPattern() {
+  return state.startSeed;
+}

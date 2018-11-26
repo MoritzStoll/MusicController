@@ -11,8 +11,6 @@ let notesBlack = ["C#", "D#", "F#", "G#", "A#"];
 white.reverse();
 black.reverse();
 
-console.log(white);
-
 for (let i = MIN_OCTAVE; i <= MAX_OCTAVE; i++) {
   white.forEach((key, index) => {
     key.id = notesWhite[index % 7] + i;
@@ -27,12 +25,11 @@ keys.forEach(key => {
   key.addEventListener("click", () => playNote(key.id));
 });
 
-
 var pianoGain = new Tone.Gain();
 pianoGain.toMaster();
 
 var tremolo = new Tone.Tremolo(9, 0.75).connect(pianoGain);
-tremolo.start()
+tremolo.start();
 
 var piano = new Tone.Sampler(
   {
@@ -54,7 +51,6 @@ var piano = new Tone.Sampler(
     baseUrl: "./src/salamander/"
   }
 ).connect(tremolo);
-
 
 function playNote(note) {
   let key = document.getElementById(note);
