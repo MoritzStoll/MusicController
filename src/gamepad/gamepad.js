@@ -1,8 +1,9 @@
-let mapping, update, pressedbuttons, storage;
+let mapping, update, pressedbuttons, storage, gamepad;
 
 update = null;
 pressedButtons = [];
 storage = window.localStorage;
+gamepad = document.getElementById("gamepad");
 
 initGamepad();
 
@@ -54,7 +55,6 @@ function loop() {
     return;
   }
   var gp = gamepads[0];
-
   let buttonCache = [];
   for (let i = 0; i < pressedButtons.length; i++) {
     buttonCache[i] = pressedButtons[i];
@@ -92,6 +92,8 @@ function loop() {
 let beatPlays = false;
 function startAction(key) {
   key.element.setAttribute("style", `fill: ${key.playColor};`);
+  gamepad.classList.add("shake");
+
   if (key.id == "l2") {
     //receiveChord("c#");
     if (beatPlays) {
@@ -112,6 +114,7 @@ function startAction(key) {
 
 function stopAction(key) {
   key.element.setAttribute("style", `fill: ${key.defaultColor};`);
+  gamepad.classList.remove("shake");
   if (key.note) {
     //stopNote(key);
   } else if (key.chord) {
