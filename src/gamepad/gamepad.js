@@ -60,7 +60,6 @@ function loop() {
     buttonCache[i] = pressedButtons[i];
   }
   pressedButtons = [];
-
   changeVolume(gp.axes[1]);
   changeTremolo(gp.axes[3]);
 

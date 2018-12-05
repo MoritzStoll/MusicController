@@ -28,7 +28,7 @@ keys.forEach(key => {
 var pianoGain = new Tone.Gain();
 pianoGain.toMaster();
 
-var tremolo = new Tone.Tremolo(9, 0.75).connect(pianoGain);
+let tremolo = new Tone.Tremolo(9, 0.75).connect(pianoGain);
 tremolo.start();
 
 var piano = new Tone.Sampler(
@@ -54,6 +54,7 @@ var piano = new Tone.Sampler(
 
 function playNote(note) {
   let key = document.getElementById(note);
+  console.log(key)
   key.style.opacity = 0.5;
   piano.triggerAttack(note);
   setTimeout(() => {

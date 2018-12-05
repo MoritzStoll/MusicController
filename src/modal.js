@@ -9,6 +9,9 @@ let noteList = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "B", "H"];
 let listType = null;
 let octaveNumber = null;
 let pattern = [[], [], [], []];
+let chordBuilder = {
+  key: ["Cb", "C","C#","Db", "D", "Eb", "E"]
+}
 
 octaveSlider.addEventListener("input", e => {
   octaveNumber = e.target.value;
