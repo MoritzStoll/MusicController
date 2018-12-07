@@ -155,6 +155,7 @@ function changeButtonColor(el, color) {
 }
 
 function setSound(type, sound, octaveNumber, btn) {
+  console.log(type, sound, octaveNumber, btn)
   let i = mapping.findIndex(button => button.id === btn.id);
   if (type === "chord") {
     mapping[i].chord = { sound, octaveNumber };

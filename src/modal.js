@@ -38,8 +38,10 @@ let chordBuilder = {
   notes: {
     id: "notes",
     value: ["Cb", "C","C#","Db", "D", "Eb", "E","F","F#","Gb", "G","Ab", "A", "Bb", "B"]
-  }
+  },
+  currentChord: new Array(3)
 } 
+
 
 
 octaveSlider.addEventListener("input", e => {
@@ -78,8 +80,6 @@ function openDropdown(btn) {
 function createList(items, type) {
   clearModal();
   if (type == "chord") {
-    console.log("Chord")
-
     let divKey = document.createElement('div')
     let divScale = document.createElement('div')
     let divNotes = document.createElement('div')
@@ -108,7 +108,6 @@ function createList(items, type) {
     listKey.id = `listKey_${items.key.id}`
     listKey.classList.add('list')
     divKey.appendChild(listKey)
-    console.log(listKey)
 
     items.key.value.forEach((item, i)=> {
       let elKey = document.createElement("li");
@@ -133,7 +132,6 @@ function createList(items, type) {
     listScale.classList.add('list')
 
     divScale.appendChild(listScale)
-    console.log(listScale)
 
     items.scale.value.forEach((item, i)=> {
       let elScale = document.createElement("li");
@@ -156,7 +154,6 @@ function createList(items, type) {
     listNotes.id = `listNotes_${items.notes.id}`
     listNotes.classList.add('list')
     divNotes.appendChild(listNotes)
-    console.log(listNotes)
 
     items.notes.value.forEach((item, i)=> {
       let elNotes = document.createElement("li");
@@ -167,7 +164,6 @@ function createList(items, type) {
       });
       listNotes.appendChild(elNotes);
     })
-    console.log(titleNotes)
     
   } else {
     items.forEach((item, i) => {
@@ -234,14 +230,38 @@ function selectItem(e) {
     case "chord":
       listType = "chord";
       createList(chordBuilder, "chord");
+      console.log(item)
+
       break;
     case "note":
+      console.log(item)
       listType = "note";
       createList(noteList,"note");
       break;
     default:
-      setSound(listType, item, octaveNumber, button);
-      closeModal();
+      let chordPart = e.srcElement.parentNode.id.split("_")[1]
+      console.log(chordPart)
+      switch(chordPart) {
+        case "key":
+          chordBuilder.currentChord[0] = item
+          break
+        case "scale":
+          chordBuilder.currentChord[1] = item
+          break
+        case "notes":
+          chordBuilder.currentChord[2] = item
+          break
+        default:
+        setSound(listType, item, octaveNumber, button);
+        closeModal();
+        break;    
+      }
+      if (chordBuilder.currentChord[0] && chordBuilder.currentChord[1] && chordBuilder.currentChord[2]) {
+        console.log("Chord builded", chordBuilder.currentChord)
+        setSound(listType, chordBuilder.currentChord, octaveNumber, button)
+      } else {
+        console.log("Chord not builded", chordBuilder.currentChord)
+      }
       break;
   }
 }
