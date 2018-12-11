@@ -13,7 +13,7 @@ body {
   align-items: center;
   justify-content: center;
   background: lightblue;
-  transition: margin-right 0.5s;
+  transition: margin-right 0.5s, margin-left 0.5s;
 }
 .spinner {
   height: 100%;
@@ -274,6 +274,17 @@ h3.listTitle {
   opacity: 0;
 }
 
+.drum-menu {
+  position: fixed;
+  height: 100%;
+  width: 0;
+  top: 0;
+  left: 0;
+  background: lightpink;
+  transition: width 500ms;
+  overflow-x: hidden;
+}
+
 .piano-menu {
   position: fixed;
   height: 100%;
@@ -300,6 +311,24 @@ h3.listTitle {
 }
 
 .piano-menu-btn:hover {
+  opacity: 0.7;
+}
+
+.drum-menu-btn {
+  padding: 20px 10px;
+  background: darkgray;
+  position: absolute;
+  top: 20%;
+  z-index: 999;
+  left: 0;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 20px;
+  text-transform: uppercase;
+  color: lightblue;
+  font-weight: bold;
+}
+
+.drum-menu-btn:hover {
   opacity: 0.7;
 }
 

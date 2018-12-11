@@ -14,7 +14,7 @@
       <div class="double-bounce2"></div>
     </div>
     <div id="mainScreen">
-      <div id=keySelector>
+      <div id="keySelector">
         <select>
           <option value="Cb">Cb</option>
           <option value="C">C</option>
@@ -34,7 +34,7 @@
         </select>
       </div>
 
-      <div id=scaleSelector>
+      <div id="scaleSelector">
         <select>
           <option value="major">major</option>
           <option value="minor">minor</option>
@@ -56,10 +56,12 @@
       </div>
       <div id="modal"></div>
       <div class="patternBtn" id="patternButton">drum machine</div>
-      <div id="pianoMenuOpenBtn" class="piano-menu-btn">piano sound</div>
-      <div class="piano-menu" id="pianoMenu">
-        <div class="close-btn" id="pianoMenuCloseBtn">&times;</div>
-        <div class="piano-slider">
+
+      <!-- drum synthesizer -->
+      <div id="drumMenuOpenBtn" class="drum-menu-btn">drum sound</div>
+      <div class="drum-menu" id="drumMenu">
+        <div class="close-btn" id="drumMenuCloseBtn">&times;</div>
+        <div>
           <span class="input-label">gain volume</span>
           <input
             type="range"
@@ -67,11 +69,11 @@
             min="0"
             max="1"
             value="1"
-            id="gainValue"
+            id="drumGain"
             class="slider"
           />
         </div>
-        <div class="piano-slider">
+        <div>
           <span class="input-label">distortion</span>
           <input
             type="range"
@@ -80,11 +82,11 @@
             max="600"
             class="slider"
             value="0"
-            id="distortion"
+            id="drumDistortion"
           />
         </div>
-        <div id="compressorSlider">
-          <div class="piano-slider">
+        <div id="drumCompressorSlider">
+          <div>
             <span class="input-label">threshold</span>
             <input
               type="range"
@@ -96,7 +98,7 @@
               id="threshold"
             />
           </div>
-          <div class="piano-slider">
+          <div>
             <span class="input-label">ratio</span>
             <input
               type="range"
@@ -108,7 +110,7 @@
               id="ratio"
             />
           </div>
-          <div class="piano-slider">
+          <div>
             <span class="input-label">knee</span>
             <input
               type="range"
@@ -120,7 +122,7 @@
               id="knee"
             />
           </div>
-          <div class="piano-slider">
+          <div>
             <span class="input-label">attack</span>
             <input
               type="range"
@@ -132,7 +134,99 @@
               id="attack"
             />
           </div>
-          <div class="piano-slider">
+          <div>
+            <span class="input-label">release</span>
+            <input
+              type="range"
+              step="0.001"
+              min="0"
+              max="1"
+              class="slider"
+              value="0.25"
+              id="release"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- piano synthesizer -->
+      <div id="pianoMenuOpenBtn" class="piano-menu-btn">piano sound</div>
+      <div class="piano-menu" id="pianoMenu">
+        <div class="close-btn" id="pianoMenuCloseBtn">&times;</div>
+        <div>
+          <span class="input-label">gain volume</span>
+          <input
+            type="range"
+            step="0.001"
+            min="0"
+            max="1"
+            value="1"
+            id="pianoGain"
+            class="slider"
+          />
+        </div>
+        <div>
+          <span class="input-label">distortion</span>
+          <input
+            type="range"
+            step="0.001"
+            min="0"
+            max="600"
+            class="slider"
+            value="0"
+            id="pianoDistortion"
+          />
+        </div>
+        <div id="pianoCompressorSlider">
+          <div>
+            <span class="input-label">threshold</span>
+            <input
+              type="range"
+              step="0.001"
+              min="-100"
+              max="0"
+              class="slider"
+              value="-24"
+              id="threshold"
+            />
+          </div>
+          <div>
+            <span class="input-label">ratio</span>
+            <input
+              type="range"
+              step="0.001"
+              min="1"
+              max="20"
+              class="slider"
+              value="12"
+              id="ratio"
+            />
+          </div>
+          <div>
+            <span class="input-label">knee</span>
+            <input
+              type="range"
+              step="0.001"
+              min="0"
+              max="40"
+              class="slider"
+              value="30"
+              id="knee"
+            />
+          </div>
+          <div>
+            <span class="input-label">attack</span>
+            <input
+              type="range"
+              step="0.001"
+              min="0"
+              max="1"
+              class="slider"
+              value="0.003"
+              id="attack"
+            />
+          </div>
+          <div>
             <span class="input-label">release</span>
             <input
               type="range"
@@ -237,13 +331,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@magenta/music@^1.0.0"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.3.11/Tone.js"></script>
     <script src="./src/teoria.js" type="text/javascript"></script>
-    <script src="./src/drums.js"></script>
 
     <script src="./src/gamepad/gamepad.js"></script>
     <script src="./src/modal.js"></script>
     <script src="./src/viewController.js"></script>
     <script src="./src/teoria.js"></script>
     <script src="./src/piano.js"></script>
+    <script src="./src/drums.js"></script>
     <script src="./src/synthFunctions.js"></script>
   </body>
 </html>

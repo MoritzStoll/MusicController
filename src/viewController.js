@@ -1,10 +1,15 @@
 let loading = document.getElementById('loading');
 let mainScreen = document.getElementById('mainScreen');
+
 let pianoMenu = document.getElementById('pianoMenu');
 let pianoMenuOpenBtn = document.getElementById('pianoMenuOpenBtn');
 let pianoMenuCloseBtn = document.getElementById('pianoMenuCloseBtn');
-
 let pianoMenuState = false;
+
+let drumMenu = document.getElementById('drumMenu');
+let drumMenuOpenBtn = document.getElementById('drumMenuOpenBtn');
+let drumMenuCloseBtn = document.getElementById('drumMenuCloseBtn');
+let drumMenuState = false;
 
 pianoMenuOpenBtn.addEventListener('click', () => {
   pianoMenuState = true;
@@ -18,6 +23,20 @@ pianoMenuCloseBtn.addEventListener('click', () => {
   pianoMenuState = false;
   pianoMenu.style.width = '0px';
   mainScreen.style.marginRight = '0px';
+});
+
+drumMenuOpenBtn.addEventListener('click', () => {
+  drumMenuState = true;
+  drumMenu.style.width = '200px';
+  mainScreen.style.marginLeft = '200px';
+  drumMenuOpenBtn.style.visibility = 'hidden';
+});
+
+drumMenuCloseBtn.addEventListener('click', () => {
+  drumMenuOpenBtn.style.visibility = 'visible';
+  drumMenuState = false;
+  drumMenu.style.width = '0px';
+  mainScreen.style.marginLeft = '0px';
 });
 
 stopLoading();
