@@ -148,6 +148,27 @@ function addListener(button, index) {
     changeButtonColor(key.element, key.setupColor);
     openDropdown(key);
   });
+
+  button.addEventListener("mouseover", e => {
+    var key = mapping[index];
+    var value = key.chord ? key.chord.chord : key.note.sound
+    info.style.background = "white";
+
+
+    info.innerHTML = (value == undefined) ? "?" : value;
+
+  });
+
+  
+  button.addEventListener("mouseout", e => {
+    info.innerHTML = ""
+    info.style.background = "transparent";
+  })
+  
+}
+
+function showButtonText() {
+
 }
 
 function changeButtonColor(el, color) {
