@@ -1,5 +1,5 @@
 let Tone = mm.Player.tone;
-let sampleBaseUrl = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699";
+let sampleBaseUrl = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699';
 let reverb = new Tone.Convolver(
   `${sampleBaseUrl}/small-drum-room.wav`
 ).toMaster();
@@ -133,12 +133,12 @@ let drumKit = [
 
 let temperature = 1.0;
 let rnn = new mm.MusicRNN(
-  "https://storage.googleapis.com/download.magenta.tensorflow.org/tfjs_checkpoints/music_rnn/drum_kit_rnn"
+  'https://storage.googleapis.com/download.magenta.tensorflow.org/tfjs_checkpoints/music_rnn/drum_kit_rnn'
 );
 
 rnn.initialize().then(() => {
   ready = true;
-  stopLoading();
+  //stopLoading();
   start();
 });
 
@@ -168,16 +168,16 @@ function humanizeTime(time) {
 
 function getStepVelocity(step) {
   if (step % 4 === 0) {
-    return "high";
+    return 'high';
   } else if (step % 2 === 0) {
-    return "med";
+    return 'med';
   } else {
-    return "low";
+    return 'low';
   }
 }
 
 let stepCounter = 0;
-let oneEighth = Tone.Time("8n").toSeconds();
+let oneEighth = Tone.Time('8n').toSeconds();
 
 function tick(time = Tone.now() - Tone.context.lookAhead) {
   if (_.isNumber(stepCounter) && state.pattern) {
@@ -192,7 +192,7 @@ function tick(time = Tone.now() - Tone.context.lookAhead) {
     let drums = state.pattern[stepIdx];
     drums.forEach(d => {
       let humanizedTime = stepIdx === 0 ? time : humanizeTime(time);
-      outputs["internal"].play(d, velocity, humanizedTime);
+      outputs['internal'].play(d, velocity, humanizedTime);
     });
   }
 }

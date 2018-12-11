@@ -16,6 +16,96 @@
     <div id="mainScreen">
       <ul id="modal"></ul>
       <div class="patternBtn" id="patternButton">drum machine</div>
+      <div id="pianoMenuOpenBtn" class="piano-menu-btn">piano sound</div>
+      <div class="piano-menu" id="pianoMenu">
+        <div class="close-btn" id="pianoMenuCloseBtn">&times;</div>
+        <div class="piano-slider">
+          <span class="input-label">gain volume</span>
+          <input
+            type="range"
+            step="0.001"
+            min="0"
+            max="1"
+            value="1"
+            id="gainValue"
+            class="slider"
+          />
+        </div>
+        <div class="piano-slider">
+          <span class="input-label">distortion</span>
+          <input
+            type="range"
+            step="0.001"
+            min="0"
+            max="600"
+            class="slider"
+            value="0"
+            id="distortion"
+          />
+        </div>
+        <div id="compressorSlider">
+          <div class="piano-slider">
+            <span class="input-label">threshold</span>
+            <input
+              type="range"
+              step="0.001"
+              min="-100"
+              max="0"
+              class="slider"
+              value="-24"
+              id="threshold"
+            />
+          </div>
+          <div class="piano-slider">
+            <span class="input-label">ratio</span>
+            <input
+              type="range"
+              step="0.001"
+              min="1"
+              max="20"
+              class="slider"
+              value="12"
+              id="ratio"
+            />
+          </div>
+          <div class="piano-slider">
+            <span class="input-label">knee</span>
+            <input
+              type="range"
+              step="0.001"
+              min="0"
+              max="40"
+              class="slider"
+              value="30"
+              id="knee"
+            />
+          </div>
+          <div class="piano-slider">
+            <span class="input-label">attack</span>
+            <input
+              type="range"
+              step="0.001"
+              min="0"
+              max="1"
+              class="slider"
+              value="0.003"
+              id="attack"
+            />
+          </div>
+          <div class="piano-slider">
+            <span class="input-label">release</span>
+            <input
+              type="range"
+              step="0.001"
+              min="0"
+              max="1"
+              class="slider"
+              value="0.25"
+              id="release"
+            />
+          </div>
+        </div>
+      </div>
       <div id="main">
         <!-- prettier-ignore -->
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="gamepad" width="512px" height="369px" viewBox="0 0 512 369" version="1.1">
