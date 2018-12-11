@@ -107,7 +107,7 @@ function startAction(key) {
     playNote(key.note.sound + key.note.octaveNumber);
   }
   if (key.chord) {
-    playChord(key.chord.sound, key.chord.octaveNumber);
+    playChord(key.chord.chord, key.chord.octaveNumber);
   }
 }
 
@@ -146,6 +146,7 @@ function addListener(button, index) {
   button.addEventListener("click", () => {
     let key = mapping[index];
     changeButtonColor(key.element, key.setupColor);
+    console.log(key)
     openDropdown(key);
   });
 }
@@ -155,10 +156,18 @@ function changeButtonColor(el, color) {
 }
 
 function setSound(type, sound, octaveNumber, btn) {
-  console.log(type, sound, octaveNumber, btn)
+  
   let i = mapping.findIndex(button => button.id === btn.id);
   if (type === "chord") {
-    mapping[i].chord = { sound, octaveNumber };
+    console.log(sound)
+    var scale = sound[0]
+    var note = sound[1]
+
+    var chord = teoria.note(note).chord(scale).name
+
+
+    mapping[i].chord = { chord, octaveNumber };
+    console.log(mapping[i].chord)
     mapping[i].note = null;
   } else {
     mapping[i].note = { sound, octaveNumber };
@@ -166,4 +175,5 @@ function setSound(type, sound, octaveNumber, btn) {
   }
   let gamepad = JSON.stringify(mapping);
   localStorage.setItem("gamepadMapping", gamepad);
+  console.log("written")
 }

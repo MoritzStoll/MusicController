@@ -7,6 +7,30 @@ let white = keys.slice(0, 21);
 let black = keys.slice(21, keys.length);
 let notesWhite = ["C", "D", "E", "F", "G", "A", "B"];
 let notesBlack = ["C#", "D#", "F#", "G#", "A#"];
+let sameNotes = {
+  "CB": "B",
+  "DB": "C#",
+  "EB": "D#",
+  "FB": "E#",
+  "GB": "F#",
+  "AB": "G#",
+  "BB": "A#",
+  "C#": "DB",
+  "D#": "EB",
+  "E#": "F",
+  "F#": "GB",
+  "G#": "AB",
+  "A#": "BB",
+  "B#": "C",
+  "C": "C",
+  "D": "D",
+  "E": "E",
+  "F": "F",
+  "G": "G",
+  "A": "A",
+  "B": "B",
+  "H": "B"
+}
 
 white.reverse();
 black.reverse();
@@ -53,13 +77,26 @@ var piano = new Tone.Sampler(
 ).connect(tremolo);
 
 function playNote(note) {
-  let key = document.getElementById(note);
-  console.log(key)
-  key.style.opacity = 0.5;
-  piano.triggerAttack(note);
-  setTimeout(() => {
-    key.style.opacity = 1;
-  }, 100);
+
+    console.log("Note",note)
+    var note2 = note.slice(0,2)
+    var oct = note[2]
+    console.log("new note", note2)
+    
+
+    let key = document.getElementById(sameNotes[note2] + oct);
+    console.log("Key", key)
+    key.style.opacity = 0.5;
+    piano.triggerAttack(note);
+    setTimeout(() => {
+      key.style.opacity = 1;
+    }, 100);
+  
+  
+  
+
+
+  
 }
 
 function stopPianoNote(note) {
@@ -67,6 +104,7 @@ function stopPianoNote(note) {
 }
 
 function playChord(chord, octaveNumber) {
+  console.log(chord, octaveNumber)
   var c = teoria.chord(chord).simple();
   c.forEach(note => {
     playNote(note.toUpperCase() + octaveNumber);

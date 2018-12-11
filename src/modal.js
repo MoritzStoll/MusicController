@@ -1,4 +1,6 @@
 let modal = document.getElementById("modal");
+let keySelector = document.getElementById("keySelector");
+let scaleSelector = document.getElementById("scaleSelector");
 let main = document.getElementById("main");
 let octaveSlider = document.getElementById("octaveNumber");
 let pianoSVG = document.getElementById("piano");
@@ -9,37 +11,21 @@ let noteList = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "B", "H"];
 let listType = null;
 let octaveNumber = null;
 let pattern = [[], [], [], []];
+  
+
 let chordBuilder = {
-  key: {
-    id: "key",
-    value: ["Cb", "C","C#","Db", "D", "Eb", "E","F","F#","Gb", "G","Ab", "A", "Bb", "B"],
-  },
   scale: {
     id: "scale",
     value: [
       "major",
-      "minor",
-      "dorian",
-      "phrygian",
-      "lydian",
-      "mixolydian",
-      "locrian",
-      "majorpentatonic",
-      "minorpentatonic",
-      "chromatic",
-      "blues",
-      "doubleharmonic",
-      "flamenco",
-      "harmonicminor",
-      "melodicminor",
-      "wholetone"
+      "minor"
     ]
   },
   notes: {
     id: "notes",
     value: ["Cb", "C","C#","Db", "D", "Eb", "E","F","F#","Gb", "G","Ab", "A", "Bb", "B"]
   },
-  currentChord: new Array(3)
+  currentChord: new Array(2)
 } 
 
 
@@ -68,7 +54,7 @@ function openSeed() {
 
 function openDropdown(btn) {
   button = btn;
-  //modal.style.display = "unset";
+  modal.style.display = "unset";
   modal.style.opacity = 0.9;
   octaveSlider.style.visibility = "visible";
   octaveNumber = octaveSlider.value;
@@ -78,48 +64,23 @@ function openDropdown(btn) {
 }
 
 function createList(items, type) {
+  var keyBasedScale = teoria.note(keySelector.childNodes[1].value).scale(scaleSelector.childNodes[1].value)
+  console.log(keyBasedScale.simple())
   clearModal();
   if (type == "chord") {
-    let divKey = document.createElement('div')
+    modal.style.display = "flex";
+
     let divScale = document.createElement('div')
     let divNotes = document.createElement('div')
 
-    divKey.id = 'divKey'
     divScale.id = 'divScale'
     divNotes.id = 'divNotes'
 
-    divKey.classList.add('listwrapper')
     divScale.classList.add('listwrapper')
     divNotes.classList.add('listwrapper')
     
-    
-    modal.appendChild(divKey)
     modal.appendChild(divScale)
     modal.appendChild(divNotes)
-
-    // Key
-    let titleKey = document.createElement('h3');
-    titleKey.innerHTML = items.key.id
-    titleKey.id = `titleKey_${items.key.id}`
-    titleKey.classList.add("listTitle")
-    divKey.appendChild(titleKey)
-
-    let listKey = document.createElement('ul');
-    listKey.id = `listKey_${items.key.id}`
-    listKey.classList.add('list')
-    divKey.appendChild(listKey)
-
-    items.key.value.forEach((item, i)=> {
-      let elKey = document.createElement("li");
-      elKey.innerHTML = item;
-      elKey.id = `item_${i}`;
-      elKey.addEventListener("click", e => {
-        selectItem(e);
-      });
-      listKey.appendChild(elKey);
-    })
-
-
     //Scale
     let titleScale = document.createElement('h3');
     titleScale.innerHTML = items.scale.id
@@ -154,11 +115,19 @@ function createList(items, type) {
     listNotes.id = `listNotes_${items.notes.id}`
     listNotes.classList.add('list')
     divNotes.appendChild(listNotes)
+ 
 
     items.notes.value.forEach((item, i)=> {
       let elNotes = document.createElement("li");
       elNotes.innerHTML = item;
       elNotes.id = `item_${i}`;
+      if (item != "chord" && item != "note") {
+        if ((keyBasedScale.simple().includes(item.toLowerCase()) || keyBasedScale.simple().includes(sameNotes[item.toUpperCase()].toLowerCase()))) {
+          console.log("inscale")
+          elNotes.style.background = 'green'
+        }
+      }       
+     
       elNotes.addEventListener("click", e => {
         selectItem(e);
       });
@@ -170,6 +139,14 @@ function createList(items, type) {
       let el = document.createElement("li");
       el.innerHTML = item;
       el.id = `item_${i}`;
+
+      if (item != "chord" && item != "note") {
+        if ((keyBasedScale.simple().includes(item.toLowerCase()) || keyBasedScale.simple().includes(sameNotes[item.toUpperCase()].toLowerCase()))) {
+          console.log("inscale")
+          el.style.background = 'green'
+        }
+      }       
+
       el.addEventListener("click", e => {
         selectItem(e);
       });
@@ -225,43 +202,39 @@ function createSeedPattern() {
 
 function selectItem(e) {
   let item = e.srcElement.innerHTML;
-  console.log(e.srcElement)
+  console.log("Clicked Item:",item)
   switch (item) {
     case "chord":
       listType = "chord";
       createList(chordBuilder, "chord");
-      console.log(item)
-
       break;
     case "note":
-      console.log(item)
       listType = "note";
       createList(noteList,"note");
       break;
     default:
       let chordPart = e.srcElement.parentNode.id.split("_")[1]
-      console.log(chordPart)
       switch(chordPart) {
-        case "key":
+        case "scale":
           chordBuilder.currentChord[0] = item
           break
-        case "scale":
-          chordBuilder.currentChord[1] = item
-          break
         case "notes":
-          chordBuilder.currentChord[2] = item
+          chordBuilder.currentChord[1] = item
           break
         default:
         setSound(listType, item, octaveNumber, button);
         closeModal();
         break;    
       }
-      if (chordBuilder.currentChord[0] && chordBuilder.currentChord[1] && chordBuilder.currentChord[2]) {
+      if (chordBuilder.currentChord[0] && chordBuilder.currentChord[1]) {
         console.log("Chord builded", chordBuilder.currentChord)
-        setSound(listType, chordBuilder.currentChord, octaveNumber, button)
+        setSound(listType, chordBuilder.currentChord, octaveNumber, button) 
+        chordBuilder.currentChord = new Array(2)
+        closeModal();
       } else {
         console.log("Chord not builded", chordBuilder.currentChord)
       }
+    
       break;
   }
 }
