@@ -1,9 +1,54 @@
 let Tone = mm.Player.tone;
 let sampleBaseUrl = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699';
-let reverb = new Tone.Convolver(
-  `${sampleBaseUrl}/small-drum-room.wav`
-).toMaster();
+let reverb = new Tone.Convolver(`${sampleBaseUrl}/small-drum-room.wav`);
 reverb.wet.value = 0.35;
+
+var context = Tone.context;
+var piano;
+var gainNode;
+var gainSlider;
+var compressor;
+var compressorSlider;
+var distortion;
+var distortionSlider;
+
+//create piano gain with default value = 1
+gainNode = context.createGain();
+gainNode.gain.value = 0;
+gainSlider = document.getElementById('drumGain');
+gainSlider.addEventListener('input', e => {
+  gainNode.gain.value = e.srcElement.value;
+  console.log(gainNode.gain.value);
+});
+
+//create piano compressor with default values
+compressor = context.createDynamicsCompressor();
+compressor.threshold.value = -24;
+compressor.ratio.value = 12;
+compressor.knee.value = 30;
+compressor.attack.value = 0.003;
+compressor.release.value = 0.25;
+compressorSlider = document.getElementById('drumCompressorSlider').children;
+
+for (let i = 0; i < compressorSlider.length; i++) {
+  compressorSlider[i].addEventListener('input', e => {
+    compressor[e.srcElement.id].value = e.srcElement.value;
+  });
+}
+
+//create piano distortion
+distortion = context.createWaveShaper();
+distortion.curve = makeDistortionCurve(0);
+distortion.oversample = '4x';
+distortionSlider = document.getElementById('drumDistortion');
+distortionSlider.addEventListener('input', e => {
+  distortion.curve = makeDistortionCurve(parseInt(e.srcElement.value));
+});
+
+reverb.connect(gainNode);
+gainNode.connect(compressor);
+compressor.connect(distortion);
+distortion.toMaster();
 
 let ready = false;
 const TIME_HUMANIZATION = 0.01;
@@ -73,6 +118,7 @@ let reverseMidiMapping = new Map([
   [82, 8]
 ]);
 let snarePanner = new Tone.Panner().connect(reverb);
+
 new Tone.LFO(0.13, -0.25, 0.25).connect(snarePanner.pan).start();
 
 let outputs = {
@@ -88,7 +134,7 @@ let drumKit = [
     high: `${sampleBaseUrl}/808-kick-vh.mp3`,
     med: `${sampleBaseUrl}/808-kick-vm.mp3`,
     low: `${sampleBaseUrl}/808-kick-vl.mp3`
-  }).toMaster(),
+  }).connect(gainNode),
   new Tone.Players({
     high: `${sampleBaseUrl}/flares-snare-vh.mp3`,
     med: `${sampleBaseUrl}/flares-snare-vm.mp3`,

@@ -6,14 +6,14 @@ let keys = [...document.getElementById('piano').children];
 let white = keys.slice(0, 21);
 let black = keys.slice(21, keys.length);
 
-let context = Tone.context;
-let piano;
-let gainNode;
-let gainSlider;
-let compressor;
-let compressorSlider;
-let distortion;
-let distortionSlider;
+var context = Tone.context;
+var piano;
+var gainNode;
+var gainSlider;
+var compressor;
+var compressorSlider;
+var distortion;
+var distortionSlider;
 
 let notesWhite = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 let notesBlack = ['C#', 'D#', 'F#', 'G#', 'A#'];
@@ -67,7 +67,7 @@ function init() {
   //create piano gain with default value = 1
   gainNode = context.createGain();
   gainNode.gain.value = 1;
-  gainSlider = document.getElementById('gainValue');
+  gainSlider = document.getElementById('pianoGain');
   gainSlider.addEventListener('input', e => {
     gainNode.gain.value = e.srcElement.value;
   });
@@ -79,7 +79,7 @@ function init() {
   compressor.knee.value = 30;
   compressor.attack.value = 0.003;
   compressor.release.value = 0.25;
-  compressorSlider = document.getElementById('compressorSlider').children;
+  compressorSlider = document.getElementById('pianoCompressorSlider').children;
 
   for (let i = 0; i < compressorSlider.length; i++) {
     compressorSlider[i].addEventListener('input', e => {
@@ -91,7 +91,7 @@ function init() {
   distortion = context.createWaveShaper();
   distortion.curve = makeDistortionCurve(0);
   distortion.oversample = '4x';
-  distortionSlider = document.getElementById('distortion');
+  distortionSlider = document.getElementById('pianoDistortion');
   distortionSlider.addEventListener('input', e => {
     distortion.curve = makeDistortionCurve(parseInt(e.srcElement.value));
   });
