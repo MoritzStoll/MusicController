@@ -146,7 +146,6 @@ function addListener(button, index) {
   button.addEventListener("click", () => {
     let key = mapping[index];
     changeButtonColor(key.element, key.setupColor);
-    console.log(key)
     openDropdown(key);
   });
 }

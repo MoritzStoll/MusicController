@@ -101,6 +101,8 @@ function createList(items, type) {
       elScale.addEventListener("click", e => {
         selectItem(e);
       });
+
+ 
       listScale.appendChild(elScale);
     })
 
@@ -113,7 +115,7 @@ function createList(items, type) {
 
     let listNotes = document.createElement('ul');
     listNotes.id = `listNotes_${items.notes.id}`
-    listNotes.classList.add('list')
+    listNotes.classList.add('list', )
     divNotes.appendChild(listNotes)
  
 
@@ -131,6 +133,20 @@ function createList(items, type) {
       elNotes.addEventListener("click", e => {
         selectItem(e);
       });
+
+      elNotes.addEventListener("mouseenter", e => {
+        elNotes.style.background = 'rosybrown';
+      })
+      elNotes.addEventListener("mouseout", e => {
+        if ((keyBasedScale.simple().includes(item.toLowerCase()) || keyBasedScale.simple().includes(sameNotes[item.toUpperCase()].toLowerCase()))) {
+          console.log("inscale")
+          elNotes.style.background = 'green'
+        }
+
+        else {
+          elNotes.style.background ='pink'
+        }
+      })
       listNotes.appendChild(elNotes);
     })
     

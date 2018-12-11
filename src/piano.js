@@ -11,7 +11,7 @@ let sameNotes = {
   "CB": "B",
   "DB": "C#",
   "EB": "D#",
-  "FB": "E#",
+  "FB": "E",
   "GB": "F#",
   "AB": "G#",
   "BB": "A#",
@@ -57,18 +57,18 @@ tremolo.start();
 
 var piano = new Tone.Sampler(
   {
-    C3: "C3.[mp3|ogg]",
-    "D#3": "Ds3.[mp3|ogg]",
-    "F#3": "Fs3.[mp3|ogg]",
-    A3: "A3.[mp3|ogg]",
-    C4: "C4.[mp3|ogg]",
-    "D#4": "Ds4.[mp3|ogg]",
-    "F#4": "Fs4.[mp3|ogg]",
-    A4: "A4.[mp3|ogg]",
-    C5: "C5.[mp3|ogg]",
-    "D#5": "Ds5.[mp3|ogg]",
-    "F#5": "Fs5.[mp3|ogg]",
-    A5: "A5.[mp3|ogg]"
+    C3: "C3.[wav]",
+    "D#3": "Ds3.[wav]",
+    "F#3": "Fs3.[wav]",
+    A3: "A3.[wav]",
+    C4: "C4.[wav]",
+    "D#4": "Ds4.[wav]",
+    "F#4": "Fs4.[wav]",
+    A4: "A4.[wav]",
+    C5: "C5.[wav]",
+    "D#5": "Ds5.[wav]",
+    "F#5": "Fs5.[wav]",
+    A5: "A5.[wav]"
   },
   {
     release: 1,
@@ -77,26 +77,25 @@ var piano = new Tone.Sampler(
 ).connect(tremolo);
 
 function playNote(note) {
+  if (note) {
+    let key;
+    if (note[1] == "B") {
+      var note2 = note.slice(0,2)
+      console.log(sameNotes[note2]+note[2])
+      key = document.getElementById(sameNotes[note2] + note[2])
+      console.log(key)
 
-    console.log("Note",note)
-    var note2 = note.slice(0,2)
-    var oct = note[2]
-    console.log("new note", note2)
-    
-
-    let key = document.getElementById(sameNotes[note2] + oct);
-    console.log("Key", key)
+    } else {
+      key = document.getElementById(note);
+    }
     key.style.opacity = 0.5;
+
+    
     piano.triggerAttack(note);
     setTimeout(() => {
       key.style.opacity = 1;
     }, 100);
-  
-  
-  
-
-
-  
+  }
 }
 
 function stopPianoNote(note) {
@@ -104,11 +103,16 @@ function stopPianoNote(note) {
 }
 
 function playChord(chord, octaveNumber) {
-  console.log(chord, octaveNumber)
-  var c = teoria.chord(chord).simple();
-  c.forEach(note => {
-    playNote(note.toUpperCase() + octaveNumber);
-  });
+
+  if (chord) {
+    var c = teoria.chord(chord).simple();
+    console.log(c)
+    c.forEach(note => {
+      console.log(note)
+      playNote(note.toUpperCase() + octaveNumber);
+    });
+  }
+  
 }
 
 function stopPianoChord(chord) {
