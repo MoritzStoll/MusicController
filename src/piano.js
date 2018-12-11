@@ -97,7 +97,7 @@ function init() {
   });
 
   //create piano sounds
-  var piano = new Tone.Sampler(
+  piano = new Tone.Sampler(
     {
       C3: 'C3.[wav]',
       'D#3': 'Ds3.[wav]',
