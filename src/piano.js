@@ -5,8 +5,6 @@ MAX_OCTAVE = 5;
 let keys = [...document.getElementById('piano').children];
 let white = keys.slice(0, 21);
 let black = keys.slice(21, keys.length);
-let notesWhite = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-let notesBlack = ['C#', 'D#', 'F#', 'G#', 'A#'];
 
 let context = Tone.context;
 let piano;
@@ -17,6 +15,32 @@ let compressorSlider;
 let distortion;
 let distortionSlider;
 
+let notesWhite = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+let notesBlack = ['C#', 'D#', 'F#', 'G#', 'A#'];
+let sameNotes = {
+  CB: 'B',
+  DB: 'C#',
+  EB: 'D#',
+  FB: 'E',
+  GB: 'F#',
+  AB: 'G#',
+  BB: 'A#',
+  'C#': 'DB',
+  'D#': 'EB',
+  'E#': 'F',
+  'F#': 'GB',
+  'G#': 'AB',
+  'A#': 'BB',
+  'B#': 'C',
+  C: 'C',
+  D: 'D',
+  E: 'E',
+  F: 'F',
+  G: 'G',
+  A: 'A',
+  B: 'B',
+  H: 'B'
+};
 window.onload = function() {
   init();
 };
@@ -56,6 +80,7 @@ function init() {
   compressor.attack.value = 0.003;
   compressor.release.value = 0.25;
   compressorSlider = document.getElementById('compressorSlider').children;
+
   for (let i = 0; i < compressorSlider.length; i++) {
     compressorSlider[i].addEventListener('input', e => {
       compressor[e.srcElement.id].value = e.srcElement.value;
@@ -72,20 +97,20 @@ function init() {
   });
 
   //create piano sounds
-  piano = new Tone.Sampler(
+  var piano = new Tone.Sampler(
     {
-      C3: 'C3.[mp3|ogg]',
-      'D#3': 'Ds3.[mp3|ogg]',
-      'F#3': 'Fs3.[mp3|ogg]',
-      A3: 'A3.[mp3|ogg]',
-      C4: 'C4.[mp3|ogg]',
-      'D#4': 'Ds4.[mp3|ogg]',
-      'F#4': 'Fs4.[mp3|ogg]',
-      A4: 'A4.[mp3|ogg]',
-      C5: 'C5.[mp3|ogg]',
-      'D#5': 'Ds5.[mp3|ogg]',
-      'F#5': 'Fs5.[mp3|ogg]',
-      A5: 'A5.[mp3|ogg]'
+      C3: 'C3.[wav]',
+      'D#3': 'Ds3.[wav]',
+      'F#3': 'Fs3.[wav]',
+      A3: 'A3.[wav]',
+      C4: 'C4.[wav]',
+      'D#4': 'Ds4.[wav]',
+      'F#4': 'Fs4.[wav]',
+      A4: 'A4.[wav]',
+      C5: 'C5.[wav]',
+      'D#5': 'Ds5.[wav]',
+      'F#5': 'Fs5.[wav]',
+      A5: 'A5.[wav]'
     },
     {
       release: 1,
@@ -102,29 +127,34 @@ function changeGain(value) {
 }
 
 function playNote(note) {
-  let key = document.getElementById(note);
-  key.style.opacity = 0.5;
-  piano.triggerAttack(note);
-  setTimeout(() => {
-    key.style.opacity = 1;
-  }, 100);
-}
+  if (note) {
+    let key;
+    if (note[1] == 'B') {
+      var note2 = note.slice(0, 2);
+      console.log(sameNotes[note2] + note[2]);
+      key = document.getElementById(sameNotes[note2] + note[2]);
+      console.log(key);
+    } else {
+      key = document.getElementById(note);
+    }
+    key.style.opacity = 0.5;
 
-function stopPianoNote(note) {
-  //piano.triggerRelease(note + "5");
+    piano.triggerAttack(note);
+    setTimeout(() => {
+      key.style.opacity = 1;
+    }, 100);
+  }
 }
 
 function playChord(chord, octaveNumber) {
-  var c = teoria.chord(chord).simple();
-  c.forEach(note => {
-    playNote(note.toUpperCase() + octaveNumber);
-  });
-}
-
-function stopPianoChord(chord) {
-  chord.forEach(note => {
-    //piano.triggerRelease(note);
-  });
+  if (chord) {
+    var c = teoria.chord(chord).simple();
+    console.log(c);
+    c.forEach(note => {
+      console.log(note);
+      playNote(note.toUpperCase() + octaveNumber);
+    });
+  }
 }
 
 function makeDistortionCurve(amount) {

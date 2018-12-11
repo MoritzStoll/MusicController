@@ -63,7 +63,7 @@
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
+    "chord": {"chord": "CbM", "octaveNumber": "4"},
     "synthesizer": null
   },
   {
