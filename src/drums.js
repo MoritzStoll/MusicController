@@ -5,50 +5,51 @@ reverb.wet.value = 0.35;
 
 var context = Tone.context;
 var piano;
-var gainNode;
+var gainNodeDrums;
 var gainSlider;
 var compressor;
 var compressorSlider;
-var distortion;
+var distortionDrums;
 var distortionSlider;
 
 //create piano gain with default value = 1
-gainNode = context.createGain();
-gainNode.gain.value = 0;
+gainNodeDrums = context.createGain();
+gainNodeDrums.gain.value = 1;
 gainSlider = document.getElementById('drumGain');
 gainSlider.addEventListener('input', e => {
-  gainNode.gain.value = e.srcElement.value;
-  console.log(gainNode.gain.value);
+  gainNodeDrums.gain.value = e.srcElement.value;
+  console.log(gainNodeDrums.gain.value);
 });
 
 //create piano compressor with default values
-compressor = context.createDynamicsCompressor();
-compressor.threshold.value = -24;
-compressor.ratio.value = 12;
-compressor.knee.value = 30;
-compressor.attack.value = 0.003;
-compressor.release.value = 0.25;
+compressorDrums = context.createDynamicsCompressor();
+compressorDrums.threshold.value = -24;
+compressorDrums.ratio.value = 12;
+compressorDrums.knee.value = 30;
+compressorDrums.attack.value = 0.003;
+compressorDrums.release.value = 0.25;
 compressorSlider = document.getElementById('drumCompressorSlider').children;
 
 for (let i = 0; i < compressorSlider.length; i++) {
   compressorSlider[i].addEventListener('input', e => {
-    compressor[e.srcElement.id].value = e.srcElement.value;
+    compressorDrums[e.srcElement.id].value = e.srcElement.value;
   });
 }
 
-//create piano distortion
-distortion = context.createWaveShaper();
-distortion.curve = makeDistortionCurve(0);
-distortion.oversample = '4x';
+//create piano distortionDrums
+distortionDrums = context.createWaveShaper();
+distortionDrums.curve = makeDistortionCurve(0);
+distortionDrums.oversample = '4x';
 distortionSlider = document.getElementById('drumDistortion');
+
 distortionSlider.addEventListener('input', e => {
-  distortion.curve = makeDistortionCurve(parseInt(e.srcElement.value));
+  distortionDrums.curve = makeDistortionCurve(parseInt(e.srcElement.value));
 });
 
-reverb.connect(gainNode);
-gainNode.connect(compressor);
-compressor.connect(distortion);
-distortion.toMaster();
+reverb.connect(gainNodeDrums);
+gainNodeDrums.connect(compressorDrums);
+compressorDrums.connect(distortionDrums);
+distortionDrums.toMaster();
 
 let ready = false;
 const TIME_HUMANIZATION = 0.01;
@@ -134,7 +135,7 @@ let drumKit = [
     high: `${sampleBaseUrl}/808-kick-vh.mp3`,
     med: `${sampleBaseUrl}/808-kick-vm.mp3`,
     low: `${sampleBaseUrl}/808-kick-vl.mp3`
-  }).connect(gainNode),
+  }).connect(gainNodeDrums),
   new Tone.Players({
     high: `${sampleBaseUrl}/flares-snare-vh.mp3`,
     med: `${sampleBaseUrl}/flares-snare-vm.mp3`,
