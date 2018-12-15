@@ -15,6 +15,9 @@ var compressorSlider;
 var distortion;
 var distortionSlider;
 
+var filter = context.createBiquadFilter();
+var filterSlider;
+
 let notesWhite = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 let notesBlack = ['C#', 'D#', 'F#', 'G#', 'A#'];
 let sameNotes = {
@@ -96,6 +99,13 @@ function init() {
     distortion.curve = makeDistortionCurve(parseInt(e.srcElement.value));
   });
 
+  //Create Equalizer
+  filter.type ="lowpass";
+  filter.frequency.value = 500;
+  filter.detune.value = 30;
+  filter.Q.value = 1;
+  filter.gain.value = 25;
+
   //create piano sounds
   piano = new Tone.Sampler(
     {
@@ -119,7 +129,8 @@ function init() {
   ).connect(gainNode);
   gainNode.connect(compressor);
   compressor.connect(distortion);
-  distortion.toMaster();
+  distortion.connect(filter)
+  filter.toMaster();
 }
 
 function changeGain(value) {
