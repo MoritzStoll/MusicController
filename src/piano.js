@@ -15,7 +15,7 @@ var compressorSlider;
 var distortion;
 var distortionSlider;
 
-var filter = context.createBiquadFilter();
+var filter;
 var filterSlider;
 
 let notesWhite = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
@@ -100,11 +100,21 @@ function init() {
   });
 
   //Create Equalizer
+  filter = context.createBiquadFilter();
   filter.type ="lowpass";
   filter.frequency.value = 500;
   filter.detune.value = 30;
   filter.Q.value = 1;
   filter.gain.value = 25;
+
+  filterSlider = document.getElementById('pianoEqualizerSlider').children;
+  for (let i = 0; i < filterSlider.length; i++) {
+    filterSlider[i].addEventListener('input', e => {
+      filter[e.srcElement.id].value = e.srcElement.value;
+    });
+  }
+
+
 
   //create piano sounds
   piano = new Tone.Sampler(
@@ -144,9 +154,10 @@ function playNote(note) {
       var note2 = note.slice(0, 2);
       console.log(sameNotes[note2] + note[2]);
       key = document.getElementById(sameNotes[note2] + note[2]);
-      console.log(key);
+      console.log("Key",key);
     } else {
       key = document.getElementById(note);
+      console.log(key)
     }
     key.style.opacity = 0.5;
 

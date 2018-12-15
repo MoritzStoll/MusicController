@@ -150,6 +150,69 @@
             />
           </div>
         </div>
+        <div id="drumEqualizerSlider">
+          <div>
+            <span class="input-label">type</span>
+              <select id="type">
+                <option value="lowpass">Low Pass</option>
+                <option value="highpass">High Pass</option>
+                <option value="bandpass">Band Pass</option>
+                <option value="allpass">All Pass</option>
+                <option value="notch">Notch</option>
+                <option value="lowshelf">Lowshelf</option>
+                <option value="highshelf">Highshelf</option>
+                <option value="peaking">Peaking</option>
+              </select>
+          </div>
+          <div>
+            <span class="input-label">frequency</span>
+            <input
+              type="range"
+              step="0.001"
+              min="20"
+              max="20000"
+              class="slider"
+              value="500"
+              id="frequency"
+            />
+          </div>
+          <div>
+            <span class="input-label">detune</span>
+            <input
+              type="range"
+              step="0.001"
+              min="0"
+              max="30"
+              class="slider"
+              value="30"
+              id="detune"
+            />
+          </div>
+          <div>
+            <span class="input-label">Q</span>
+            <input
+              type="range"
+              step="0.001"
+              min="0"
+              max="1000"
+              class="slider"
+              value="1"
+              id="Q"
+            />
+          </div>
+          <div>
+            <span class="input-label">gain</span>
+            <input
+              type="range"
+              step="0.001"
+              min="-40"
+              max="40"
+              class="slider"
+              value="25"
+              id="gain"
+            />
+          </div>
+        </div>
       </div>
 
       <!-- piano synthesizer -->
@@ -239,6 +302,69 @@
               class="slider"
               value="0.25"
               id="release"
+            />
+          </div>
+        </div>
+        <div id="pianoEqualizerSlider">
+          <div>
+            <span class="input-label">type</span>
+              <select id="type">
+                <option value="lowpass">Low Pass</option>
+                <option value="highpass">High Pass</option>
+                <option value="bandpass">Band Pass</option>
+                <option value="allpass">All Pass</option>
+                <option value="notch">Notch</option>
+                <option value="lowshelf">Lowshelf</option>
+                <option value="highshelf">Highshelf</option>
+                <option value="peaking">Peaking</option>
+              </select>
+          </div>
+          <div>
+            <span class="input-label">frequency</span>
+            <input
+              type="range"
+              step="0.001"
+              min="20"
+              max="20000"
+              class="slider"
+              value="500"
+              id="frequency"
+            />
+          </div>
+          <div>
+            <span class="input-label">detune</span>
+            <input
+              type="range"
+              step="0.001"
+              min="0"
+              max="30"
+              class="slider"
+              value="30"
+              id="detune"
+            />
+          </div>
+          <div>
+            <span class="input-label">Q</span>
+            <input
+              type="range"
+              step="0.001"
+              min="0"
+              max="1000"
+              class="slider"
+              value="1"
+              id="Q"
+            />
+          </div>
+          <div>
+            <span class="input-label">gain</span>
+            <input
+              type="range"
+              step="0.001"
+              min="-40"
+              max="40"
+              class="slider"
+              value="25"
+              id="gain"
             />
           </div>
         </div>

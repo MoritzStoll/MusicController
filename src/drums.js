@@ -12,6 +12,9 @@ var compressorSlider;
 var distortionDrums;
 var distortionSlider;
 
+var filterDrums;
+var filterDrumsSlider;
+
 //create piano gain with default value = 1
 gainNodeDrums = context.createGain();
 gainNodeDrums.gain.value = 1;
@@ -46,10 +49,26 @@ distortionSlider.addEventListener('input', e => {
   distortionDrums.curve = makeDistortionCurve(parseInt(e.srcElement.value));
 });
 
+//create drum Equalizer
+filterDrums = context.createBiquadFilter();
+filterDrums.type ="lowpass";
+filterDrums.frequency.value = 500;
+filterDrums.detune.value = 30;
+filterDrums.Q.value = 1;
+filterDrums.gain.value = 25;
+
+filterDrumsSlider = document.getElementById('drumEqualizerSlider').children;
+for (let i = 0; i < filterDrumsSlider.length; i++) {
+  filterDrumsSlider[i].addEventListener('input', e => {
+    filterDrums[e.srcElement.id].value = e.srcElement.value;
+  });
+}
+
 reverb.connect(gainNodeDrums);
 gainNodeDrums.connect(compressorDrums);
 compressorDrums.connect(distortionDrums);
-distortionDrums.toMaster();
+distortionDrums.connect(filterDrums)
+filterDrums.toMaster();
 
 let ready = false;
 const TIME_HUMANIZATION = 0.01;
