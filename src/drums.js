@@ -324,7 +324,42 @@ function setSeedPattern(pattern) {
   state.startSeed = pattern;
   start();
 }
+let pattern = [[], [], [], []];
 
-function getSeedPattern() {
-  return state.startSeed;
+createSeedPattern();
+function createSeedPattern() {
+  pattern = state.startSeed;
+  let container = document.createElement('div');
+  container.className = 'pattern';
+  pattern.forEach((col, index) => {
+    var col = document.createElement('div');
+    col.className = 'col';
+    for (let i = 0; i < 9; i++) {
+      let pad = document.createElement('div');
+      pad.className = 'pad';
+      pad.id = `${index}_${i}`;
+      if (pattern[index].includes(i)) {
+        pad.style.background = 'white';
+        pad.className += ' selected';
+      }
+      pad.addEventListener('click', e => {
+        var colIndex = pad.id.charAt(0);
+        var padIndex = pad.id.charAt(2);
+        if (!pad.className.includes('selected')) {
+          pad.style.background = 'white';
+          pad.className += ' selected';
+          pattern[colIndex].push(Number(padIndex));
+        } else {
+          pad.className = 'pad';
+          pad.style.background = 'lightslategray';
+          pattern[colIndex] = pattern[colIndex].filter(pad => pad != padIndex);
+        }
+        setSeedPattern(pattern);
+      });
+
+      col.appendChild(pad);
+    }
+    container.appendChild(col);
+  });
+  drumMenu.appendChild(container);
 }
