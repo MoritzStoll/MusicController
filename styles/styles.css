@@ -15,6 +15,7 @@ body {
   justify-content: center;
   background: lightblue;
   transition: margin-right 0.5s, margin-left 0.5s;
+  overflow: hidden;
 }
 .spinner {
   height: 100%;
@@ -74,7 +75,7 @@ body {
   visibility: hidden;
   height: 100px;
   display: flex;
-  width: 90%;
+  width: 80%;
   -webkit-appearance: none;
   flex: 1;
   background: transparent;
@@ -147,9 +148,7 @@ body {
   }
 }
 
-
 #infoBox {
-
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 1.2em;
   font-weight: 600;
@@ -162,12 +161,11 @@ body {
   justify-content: center;
   align-items: center;
   border-radius: 6px;
-
 }
 #modal {
   -webkit-overflow-scrolling: touch;
   position: absolute;
-  top: 100px;
+  top: 40px;
   z-index: 1;
   opacity: 0;
   display: flex;
@@ -197,17 +195,27 @@ body {
 .listwrapper {
   display: flex;
   flex-direction: column;
+  min-width: 185px;
 }
 
 h3.listTitle {
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
   justify-self: center;
   align-self: center;
+  color: darkgrey;
+  padding: 10px 20px;
+  background: white;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  text-transform: uppercase;
 }
 
 .list {
   justify-self: center;
   align-self: center;
   overflow-y: scroll;
+  padding-inline-start: 0px;
+  overflow-y: auto;
 }
 
 .list > li {
@@ -217,7 +225,7 @@ h3.listTitle {
   justify-content: center;
   align-items: center;
   margin: 5px 0;
-  padding: 5px 30px;
+  padding: 5px 50px;
   background: pink;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 1.2em;
@@ -402,4 +410,8 @@ h3.listTitle {
   height: 25px;
   background: pruple;
   cursor: pointer;
+}
+
+.gamepadModal  {
+  position: relative;
 }

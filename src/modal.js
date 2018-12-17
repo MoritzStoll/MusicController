@@ -9,7 +9,7 @@ let chordList = ['C', 'G', 'Am', 'F', 'Em', 'Cmaj7', 'D7', 'F#m', 'E'];
 let noteList = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'B', 'H'];
 let listType = null;
 let octaveNumber = null;
-
+let scaleSelected = false;
 let chordBuilder = {
   scale: {
     id: 'scale',
@@ -57,8 +57,8 @@ function createList(items, type) {
   var keyBasedScale = teoria
     .note(keySelector.childNodes[1].value)
     .scale(scaleSelector.childNodes[1].value);
-  console.log(keyBasedScale.simple());
   clearModal();
+
   if (type == 'chord') {
     modal.style.display = 'flex';
 
@@ -70,6 +70,8 @@ function createList(items, type) {
 
     divScale.classList.add('listwrapper');
     divNotes.classList.add('listwrapper');
+
+    divNotes.style.opacity = 0;
 
     modal.appendChild(divScale);
     modal.appendChild(divNotes);
@@ -91,6 +93,11 @@ function createList(items, type) {
       elScale.innerHTML = item;
       elScale.id = `item_${i}`;
       elScale.addEventListener('click', e => {
+        e.srcElement.style.background = 'rosybrown';
+        document.getElementById(`item_${i === 0 ? 1 : 0}`).style.background =
+          'pink';
+        scaleSelected = true;
+        divNotes.style.opacity = 1;
         selectItem(e);
       });
 

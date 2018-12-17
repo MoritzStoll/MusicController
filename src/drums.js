@@ -51,7 +51,7 @@ distortionSlider.addEventListener('input', e => {
 
 //create drum Equalizer
 filterDrums = context.createBiquadFilter();
-filterDrums.type ="lowpass";
+filterDrums.type = 'lowpass';
 filterDrums.frequency.value = 500;
 filterDrums.detune.value = 30;
 filterDrums.Q.value = 1;
@@ -67,7 +67,7 @@ for (let i = 0; i < filterDrumsSlider.length; i++) {
 reverb.connect(gainNodeDrums);
 gainNodeDrums.connect(compressorDrums);
 compressorDrums.connect(distortionDrums);
-distortionDrums.connect(filterDrums)
+distortionDrums.connect(filterDrums);
 filterDrums.toMaster();
 
 let ready = false;
@@ -361,5 +361,5 @@ function createSeedPattern() {
     }
     container.appendChild(col);
   });
-  drumMenu.appendChild(container);
+  drumMenu.insertBefore(container, document.getElementById('firstDrumSound'));
 }
