@@ -14,8 +14,8 @@
       <div class="double-bounce2"></div>
     </div>
     <div id="mainScreen">
-      <div id="keySelector">
-        <select>
+      <div id="keySelector" class="gamepadSelector">
+        <select id="keySeletion" disabled>
           <option value="Cb">Cb</option>
           <option value="C">C</option>
           <option value="C#">C#</option>
@@ -34,8 +34,8 @@
         </select>
       </div>
 
-      <div id="scaleSelector">
-        <select>
+      <div id="scaleSelector" class="gamepadSelector">
+        <select id="scaleSelection" disabled>
           <option value="major">major</option>
           <option value="minor">minor</option>
           <option value="dorian#">dorian#</option>
@@ -53,6 +53,9 @@
           <option value="melodicminor">melodicminor</option>
           <option value="wholetone">wholetone</option>
         </select>
+      </div>
+      <div class="close-btn gamepadModalClose" id="gamepadMenuCloseBtn">
+        &times;
       </div>
       <div id="modal"></div>
 

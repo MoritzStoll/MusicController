@@ -165,7 +165,7 @@ body {
 #modal {
   -webkit-overflow-scrolling: touch;
   position: absolute;
-  top: 40px;
+  top: 130px;
   z-index: 1;
   opacity: 0;
   display: flex;
@@ -196,6 +196,7 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 185px;
+  max-height: 300px;
 }
 
 h3.listTitle {
@@ -369,6 +370,14 @@ h3.listTitle {
   transform: scale(2);
 }
 
+.gamepadModalClose {
+  position: absolute;
+  top: 3px;
+  right: 36%;
+  z-index: 999;
+  visibility: hidden;
+}
+
 .input-label {
   white-space: nowrap;
   display: flex;
@@ -391,6 +400,34 @@ h3.listTitle {
   transition: opacity 0.2s;
 }
 
+select {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  padding: 10px 50px 10px 20px;
+  border-radius: 0px;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: 20px;
+  text-transform: uppercase;
+  background: white
+    url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxMCIgdmlld0JveD0iMCAwIDE2IDEwIj4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0ibm9uemVybyI+CiAgICAgICAgPHBhdGggc3Ryb2tlPSIjMEMwQjNFIiBzdHJva2Utd2lkdGg9IjIiIGQ9Ik0xIDFsNyA3IDctNyIvPgogICAgICAgIDxwYXRoIGQ9Ik0yMCAxNUgtNFYtOWgyNHoiLz4KICAgIDwvZz4KPC9zdmc+Cg==)
+    90% 50% no-repeat;
+  width: 100%;
+}
+
+.gamepadSelector {
+  opacity: 0;
+  margin: 10px 0;
+  transition: opacity 300ms;
+  position: absolute;
+  top: 10px;
+  z-index: 9;
+}
+
+#scaleSelector {
+  top: 70px;
+}
 .slider:hover {
   opacity: 1;
 }

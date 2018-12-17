@@ -1,8 +1,9 @@
 let modal = document.getElementById('modal');
 let keySelector = document.getElementById('keySelector');
-let scaleSelector = document.getElementById('scaleSelector');
 let main = document.getElementById('main');
 let octaveSlider = document.getElementById('octaveNumber');
+let keySeletion = document.getElementById('keySeletion');
+let scaleSelection = document.getElementById('scaleSelection');
 let pianoSVG = document.getElementById('piano');
 let button = null;
 let chordList = ['C', 'G', 'Am', 'F', 'Em', 'Cmaj7', 'D7', 'F#m', 'E'];
@@ -10,6 +11,7 @@ let noteList = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'B', 'H'];
 let listType = null;
 let octaveNumber = null;
 let scaleSelected = false;
+let gamepadMenuCloseBtn = document.getElementById('gamepadMenuCloseBtn');
 let chordBuilder = {
   scale: {
     id: 'scale',
@@ -42,7 +44,20 @@ octaveSlider.addEventListener('input', e => {
   octaveNumber = e.target.value;
 });
 
+keySelector.addEventListener('input', () => {
+  createList(chordBuilder, listType);
+});
+
+scaleSelector.addEventListener('input', () => {
+  createList(chordBuilder, listType);
+});
+
+gamepadMenuCloseBtn.addEventListener('click', () => {
+  closeModal();
+});
+
 function openDropdown(btn) {
+  gamepadMenuCloseBtn.style.visibility = 'visible';
   button = btn;
   modal.style.display = 'unset';
   modal.style.opacity = 0.9;
@@ -60,6 +75,11 @@ function createList(items, type) {
   clearModal();
 
   if (type == 'chord') {
+    scaleSelector.style.opacity = 1;
+    keySelector.style.opacity = 1;
+    scaleSelection.removeAttribute('disabled');
+    keySeletion.removeAttribute('disabled');
+    console.log(keySelector);
     modal.style.display = 'flex';
 
     let divScale = document.createElement('div');
@@ -96,7 +116,7 @@ function createList(items, type) {
         e.srcElement.style.background = 'rosybrown';
         document.getElementById(`item_${i === 0 ? 1 : 0}`).style.background =
           'pink';
-        scaleSelected = true;
+        scaleSelected = i;
         divNotes.style.opacity = 1;
         selectItem(e);
       });
@@ -227,6 +247,12 @@ function closeModal() {
   if (button) {
     changeButtonColor(button.element);
   }
+  scaleSelected = false;
+  scaleSelector.style.opacity = 0;
+  keySelector.style.opacity = 0;
+  gamepadMenuCloseBtn.style.visibility = 'hidden';
+  scaleSelection.setAttribute('disabled', '');
+  keySeletion.setAttribute('disabled', '');
   listType = null;
   modal.style.opacity = 0;
   main.style.opacity = 0.8;
