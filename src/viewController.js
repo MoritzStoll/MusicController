@@ -43,7 +43,6 @@ drumMenuCloseBtn.addEventListener('click', () => {
   mainScreen.style.marginLeft = '0px';
 });
 
-stopLoading();
 function stopLoading() {
   loading.style.opacity = 0;
   setTimeout(() => {
@@ -52,7 +51,6 @@ function stopLoading() {
 }
 
 document.getElementsByTagName('html')[0].addEventListener('mousemove', e => {
-  console.log(e);
   info.style.top = `${e.layerY}px`;
   info.style.left = `${e.layerX + 20}px`;
 });

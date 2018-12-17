@@ -204,7 +204,7 @@ let rnn = new mm.MusicRNN(
 
 rnn.initialize().then(() => {
   ready = true;
-  //stopLoading();
+  stopLoading();
   start();
 });
 
