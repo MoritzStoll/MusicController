@@ -3,32 +3,32 @@ let mapping, update, pressedbuttons, storage, gamepad;
 update = null;
 pressedButtons = [];
 storage = window.localStorage;
-gamepad = document.getElementById("gamepad");
+gamepad = document.getElementById('gamepad');
 
 initGamepad();
 
 async function initGamepad() {
-  localMapping = JSON.parse(localStorage.getItem("gamepadMapping"));
+  localMapping = JSON.parse(localStorage.getItem('gamepadMapping'));
   mapping = localMapping || (await loadMapping());
   mapping.forEach((key, index) => {
     let element = document.getElementById(key.id);
     addListener(element, index);
     mapping[index].element = element;
   });
-  window.addEventListener("gamepadconnected", () => startGamepad());
-  window.addEventListener("gamepaddisconnected", () => stopGamepad());
+  window.addEventListener('gamepadconnected', () => startGamepad());
+  window.addEventListener('gamepaddisconnected', () => stopGamepad());
 }
 
 function loadMapping() {
   return new Promise(mapping => {
     let request = new XMLHttpRequest();
     let result;
-    request.open("GET", "/src/gamepad/gamepadMappingPS4.json", true);
+    request.open('GET', '/src/gamepad/gamepadMappingPS4.json', true);
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
         mapping(JSON.parse(request.responseText));
       } else {
-        console.log("reached target server but return error");
+        console.log('reached target server but return error');
       }
     };
     request.send();
@@ -36,12 +36,12 @@ function loadMapping() {
 }
 
 function startGamepad() {
-  console.log("gamepad connected");
+  console.log('gamepad connected');
   update = requestAnimationFrame(() => loop());
 }
 
 function stopGamepad() {
-  console.log("gamepad disconnected");
+  console.log('gamepad disconnected');
   cancelAnimationFrame(update);
 }
 
@@ -90,10 +90,10 @@ function loop() {
 
 let beatPlays = false;
 function startAction(key) {
-  key.element.setAttribute("style", `fill: ${key.playColor};`);
-  gamepad.classList.add("shake");
+  key.element.setAttribute('style', `fill: ${key.playColor};`);
+  gamepad.classList.add('shake');
 
-  if (key.id == "l2") {
+  if (key.id == 'l2') {
     //receiveChord("c#");
     if (beatPlays) {
       stopDrums();
@@ -112,8 +112,8 @@ function startAction(key) {
 }
 
 function stopAction(key) {
-  key.element.setAttribute("style", `fill: ${key.defaultColor};`);
-  gamepad.classList.remove("shake");
+  key.element.setAttribute('style', `fill: ${key.defaultColor};`);
+  gamepad.classList.remove('shake');
   if (key.note) {
     //stopNote(key);
   } else if (key.chord) {
@@ -143,57 +143,48 @@ function newPress(button, buttonCache) {
 }
 
 function addListener(button, index) {
-  button.addEventListener("click", () => {
+  button.addEventListener('click', () => {
     let key = mapping[index];
     changeButtonColor(key.element, key.setupColor);
     openDropdown(key);
   });
 
-  button.addEventListener("mouseover", e => {
+  button.addEventListener('mouseover', e => {
     var key = mapping[index];
-    var value = key.chord ? key.chord.chord : key.note.sound
-    info.style.background = "white";
-
-
-    info.innerHTML = (value == undefined) ? "?" : value;
-
+    var value = key.chord ? key.chord.chord : key.note.sound;
+    info.style.background = 'white';
+    info.innerHTML = value == undefined ? '?' : value;
   });
 
-  
-  button.addEventListener("mouseout", e => {
-    info.innerHTML = ""
-    info.style.background = "transparent";
-  })
-  
+  button.addEventListener('mouseout', e => {
+    info.innerHTML = '';
+    info.style.background = 'transparent';
+  });
 }
 
-function showButtonText() {
-
-}
+function showButtonText() {}
 
 function changeButtonColor(el, color) {
-  el.setAttribute("style", `fill: ${color};`);
+  el.setAttribute('style', `fill: ${color};`);
 }
 
 function setSound(type, sound, octaveNumber, btn) {
-  
   let i = mapping.findIndex(button => button.id === btn.id);
-  if (type === "chord") {
-    console.log(sound)
-    var scale = sound[0]
-    var note = sound[1]
+  if (type === 'chord') {
+    console.log(sound);
+    var scale = sound[0];
+    var note = sound[1];
 
-    var chord = teoria.note(note).chord(scale).name
-
+    var chord = teoria.note(note).chord(scale).name;
 
     mapping[i].chord = { chord, octaveNumber };
-    console.log(mapping[i].chord)
+    console.log(mapping[i].chord);
     mapping[i].note = null;
   } else {
     mapping[i].note = { sound, octaveNumber };
     mapping[i].chord = null;
   }
   let gamepad = JSON.stringify(mapping);
-  localStorage.setItem("gamepadMapping", gamepad);
-  console.log("written")
+  localStorage.setItem('gamepadMapping', gamepad);
+  console.log('written');
 }

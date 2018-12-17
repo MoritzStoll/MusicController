@@ -300,6 +300,11 @@ h3.listTitle {
   opacity: 0;
 }
 
+#drumEqualizerSlider,
+#pianoEqualizerSlider {
+  margin-bottom: 20px;
+}
+
 .drum-menu {
   position: fixed;
   height: 100%;

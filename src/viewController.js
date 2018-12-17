@@ -6,9 +6,9 @@ let pianoMenuOpenBtn = document.getElementById('pianoMenuOpenBtn');
 let pianoMenuCloseBtn = document.getElementById('pianoMenuCloseBtn');
 let pianoMenuState = false;
 
-let info = document.createElement("div");
-info.id = "infoBox"
-document.getElementById("mainScreen").appendChild(info)
+let info = document.createElement('div');
+info.id = 'infoBox';
+document.getElementById('mainScreen').appendChild(info);
 
 let drumMenu = document.getElementById('drumMenu');
 let drumMenuOpenBtn = document.getElementById('drumMenuOpenBtn');
@@ -51,8 +51,8 @@ function stopLoading() {
   }, 500);
 }
 
-
-document.getElementsByTagName("html")[0].addEventListener("mousemove", e=> {
-    info.style.top = `${e.clientY}px`;
-    info.style.left = `${e.clientX + 20}px`;
-})
+document.getElementsByTagName('html')[0].addEventListener('mousemove', e => {
+  console.log(e);
+  info.style.top = `${e.layerY}px`;
+  info.style.left = `${e.layerX + 20}px`;
+});
