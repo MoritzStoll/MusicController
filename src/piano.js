@@ -18,6 +18,25 @@ var distortionSlider;
 var filter;
 var filterSlider;
 
+let pianoCompSwitch, pianoEqSwitch;
+
+var compActive = true, eqActive = true;
+pianoCompSwitch = document.getElementById('pianoCompSwitch').children[0]
+pianoEqSwitch = document.getElementById('pianoEqSwitch').children[0]
+
+pianoCompSwitch.addEventListener("change", () => {
+  compActive = !compActive;
+  pianoSwitches(pianoCompSwitch, compActive)
+});
+
+pianoEqSwitch.addEventListener("change", () => {
+  eqActive = !eqActive;
+  pianoSwitches(pianoEqSwitch, eqActive)
+});
+
+
+pianoCompSwitch.checked = true;
+pianoEqSwitch.checked = true;
 let notesWhite = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 let notesBlack = ['C#', 'D#', 'F#', 'G#', 'A#'];
 let sameNotes = {
@@ -137,9 +156,9 @@ function init() {
       baseUrl: './src/salamander/'
     }
   ).connect(gainNode);
-  gainNode.connect(compressor);
-  compressor.connect(distortion);
-  distortion.connect(filter)
+  gainNode.connect(distortion);
+  distortion.connect(compressor);
+  compressor.connect(filter);
   filter.toMaster();
 }
 
@@ -190,3 +209,36 @@ function makeDistortionCurve(amount) {
 
   return curve;
 }
+
+
+function pianoSwitches(checkedSwitch) {
+  
+  if (compActive && eqActive) {
+    gainNode.connect(distortion);
+    distortion.connect(compressor);
+    compressor.connect(filter);
+    filter.toMaster();
+
+  } else if (!compActive && !eqActive) {
+    compressor.disconnect()
+    filter.disconnect()
+    gainNode.connect(distortion);
+    distortion.toMaster();
+
+  } else if (!compActive && eqActive) {
+    compressor.disconnect()
+    gainNode.connect(distortion);
+    distortion.connect(filter);
+    filter.toMaster();
+
+  } else if (compActive && !eqActive) {
+    filter.disconnect()
+    gainNode.connect(distortion);
+    distortion.connect(compressor);
+    compressor.toMaster();
+  
+  }
+  console.log(checkedSwitch.parentNode.id)
+}
+
+
