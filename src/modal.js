@@ -148,7 +148,7 @@ function createList(items, type) {
             .includes(sameNotes[item.toUpperCase()].toLowerCase())
         ) {
           console.log('inscale');
-          elNotes.style.background = 'green';
+          elNotes.style.background = '#c6d379';
         }
       }
 
@@ -167,7 +167,7 @@ function createList(items, type) {
             .includes(sameNotes[item.toUpperCase()].toLowerCase())
         ) {
           console.log('inscale');
-          elNotes.style.background = 'green';
+          elNotes.style.background = '#c6d379';
         } else {
           elNotes.style.background = 'pink';
         }
@@ -188,7 +188,7 @@ function createList(items, type) {
             .includes(sameNotes[item.toUpperCase()].toLowerCase())
         ) {
           console.log('inscale');
-          el.style.background = 'green';
+          el.style.background = '#c6d379';
         }
       }
 
