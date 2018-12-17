@@ -153,7 +153,6 @@ body {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   font-size: 1.2em;
   font-weight: 600;
-  text-transform: uppercase;
   color: pink;
   position: absolute;
   width: 2.5em;
@@ -303,7 +302,7 @@ h3.listTitle {
 
 #drumEqualizerSlider,
 #pianoEqualizerSlider {
-  margin-bottom: 20px;
+  padding-bottom: 4em;
 }
 
 .drum-menu {
@@ -312,7 +311,7 @@ h3.listTitle {
   width: 0;
   top: 0;
   left: 0;
-  background: lightpink;
+  background: rgb(43, 43, 43);
   transition: width 500ms;
   overflow-x: hidden;
 }
@@ -323,7 +322,7 @@ h3.listTitle {
   width: 0;
   top: 0;
   right: 0;
-  background: lightpink;
+  background: rgb(43, 43, 43);
   transition: width 500ms;
   overflow-x: hidden;
 }
@@ -460,6 +459,26 @@ select {
 }
 
 
+#pianoCompHead, #drumCompHead {
+  background-color: #120044;
+  margin-top: 40px;
+}
+
+#pianoCompressorSlider, #drumCompressorSlider {
+  background-color: #321c6e;
+  padding-bottom: 4em;
+  transition: height 0.5s;
+} 
+
+#pianoEqualizerSlider, #drumEqualizerSlider {
+  background-color: #834653;
+  transition: height 0.5s;
+}
+
+#pianoEqHead, #drumEqHead {
+  background-color: #86253a;
+}
+
 
 /*Switches*/
 /* The switch - the box around the slider */
@@ -480,17 +499,18 @@ select {
 /* The slider */
 
 .instrumentHeader {
-  height: 5em;
+  height: 6em;
   background: palevioletred;
   padding: 10px 0em;
   margin: 0;
-  margin-top: 40px;
+
 }
 h3 {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-    font-size: 16px;
-    text-transform: uppercase;
-    text-align: center;
+  font-size: 16px;
+  text-transform: uppercase;
+  text-align: center;
+  color: white;
 }
 .sliderWrapper {
   display: flex;
@@ -506,9 +526,16 @@ h3 {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
+}
+
+#pianoEqSwitch, #drumEqSwitch {
+  background-color: #834653;
+}
+
+#pianoCompSwitch, #drumCompSwitch {
+  background-color: #321c6e;
 }
 
 .sliderSwitch:before {
@@ -524,11 +551,11 @@ h3 {
 }
 
 input:checked + .sliderSwitch {
-  background-color: #2196F3;
+  background-color:  #bdbdbd;
 }
 
 input:focus + .sliderSwitch {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px  #ccc;
 }
 
 input:checked + .sliderSwitch:before {

@@ -152,6 +152,7 @@ function addListener(button, index) {
   button.addEventListener('mouseover', e => {
     var key = mapping[index];
     var value = key.chord ? key.chord.chord : key.note.sound;
+    console.log(value)
     info.style.background = 'white';
     info.innerHTML = value == undefined ? '?' : value;
   });

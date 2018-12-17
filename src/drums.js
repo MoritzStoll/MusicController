@@ -15,6 +15,26 @@ var distortionSlider;
 var filterDrums;
 var filterDrumsSlider;
 
+let drumCompSwitch, drumEqSwitch;
+
+var compActive = true, eqActive = true;
+drumCompSwitch = document.getElementById('drumCompSwitch').children[0]
+drumEqSwitch = document.getElementById('drumEqSwitch').children[0]
+
+drumCompSwitch.checked = true;
+drumEqSwitch.checked = true;
+
+drumCompSwitch.addEventListener("change", () => {
+  compActive = !compActive;
+  drumSwitches(drumCompSwitch, compActive)
+});
+
+drumEqSwitch.addEventListener("change", () => {
+  eqActive = !eqActive;
+  drumSwitches(drumEqSwitch, eqActive)
+});
+
+
 //create piano gain with default value = 1
 gainNodeDrums = context.createGain();
 gainNodeDrums.gain.value = 1;
@@ -362,4 +382,34 @@ function createSeedPattern() {
     container.appendChild(col);
   });
   drumMenu.insertBefore(container, document.getElementById('firstDrumSound'));
+}
+
+function drumSwitches(checkedSwitch) {
+  
+  if (compActive && eqActive) {
+    gainNodeDrums.connect(distortionDrums);
+    distortionDrums.connect(compressorDrums);
+    compressorDrums.connect(filterDrums);
+    filterDrums.toMaster();
+
+  } else if (!compActive && !eqActive) {
+    compressorDrums.disconnect()
+    filterDrums.disconnect()
+    gainNodeDrums.connect(distortionDrums);
+    distortionDrums.toMaster();
+
+  } else if (!compActive && eqActive) {
+    compressorDrums.disconnect()
+    gainNodeDrums.connect(distortionDrums);
+    distortionDrums.connect(filterDrums);
+    filterDrums.toMaster();
+
+  } else if (compActive && !eqActive) {
+    filterDrums.disconnect()
+    gainNodeDrums.connect(distortionDrums);
+    distortionDrums.connect(compressorDrums);
+    compressorDrums.toMaster();
+  
+  }
+  console.log(checkedSwitch.parentNode.id)
 }

@@ -19,19 +19,24 @@ var filter;
 var filterSlider;
 
 let pianoCompSwitch, pianoEqSwitch;
+let pianoCompSlider, pianoEqSlider;
 
 var compActive = true, eqActive = true;
 pianoCompSwitch = document.getElementById('pianoCompSwitch').children[0]
 pianoEqSwitch = document.getElementById('pianoEqSwitch').children[0]
 
+pianoCompSlider = document.getElementById('pianoCompressorSlider');
+pianoEqSlider = document.getElementById('pianoEqualizerSlider');
+console.log(pianoCompSlider, pianoEqSlider);
+
 pianoCompSwitch.addEventListener("change", () => {
   compActive = !compActive;
-  pianoSwitches(pianoCompSwitch, compActive)
+  pianoSwitches(compActive)
 });
 
 pianoEqSwitch.addEventListener("change", () => {
   eqActive = !eqActive;
-  pianoSwitches(pianoEqSwitch, eqActive)
+  pianoSwitches(eqActive)
 });
 
 
