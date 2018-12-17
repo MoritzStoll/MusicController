@@ -4,6 +4,30 @@ let scaleSelector = document.getElementById('scaleSelector');
 let main = document.getElementById('main');
 let octaveSlider = document.getElementById('octaveNumber');
 let pianoSVG = document.getElementById('piano');
+let gamepadMenu = document.getElementById('gamepadMenu');
+let gamepadList = document.getElementById('gamepadList');
+
+let noteBtn = document.getElementById('noteBtn');
+let chordBtn = document.getElementById('chordBtn');
+let majorBtn = document.getElementById('majorBtn');
+let minorBtn = document.getElementById('minorBtn');
+
+let noteChordType = '';
+let majorMinotType = '';
+
+noteBtn.addEventListener('click', () => {
+  noteChordType = 'note';
+});
+chordBtn.addEventListener('click', () => {
+  noteChordType = 'chord';
+});
+majorBtn.addEventListener('click', () => {
+  majorMinotType = 'major';
+});
+minorBtn.addEventListener('click', () => {
+  majorMinotType = 'minor';
+});
+
 let button = null;
 let chordList = ['C', 'G', 'Am', 'F', 'Em', 'Cmaj7', 'D7', 'F#m', 'E'];
 let noteList = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'B', 'H'];
@@ -43,6 +67,8 @@ octaveSlider.addEventListener('input', e => {
 });
 
 function openDropdown(btn) {
+  gamepadMenu.style.opacity = 1;
+  gamepadMenu.style.display = 'flex';
   button = btn;
   modal.style.display = 'unset';
   modal.style.opacity = 0.9;
@@ -71,8 +97,9 @@ function createList(items, type) {
     divScale.classList.add('listwrapper');
     divNotes.classList.add('listwrapper');
 
-    modal.appendChild(divScale);
-    modal.appendChild(divNotes);
+    gamepadList.appendChild(divScale);
+    gamepadList.appendChild(divNotes);
+
     //Scale
     let titleScale = document.createElement('h3');
     titleScale.innerHTML = items.scale.id;
@@ -94,7 +121,7 @@ function createList(items, type) {
         selectItem(e);
       });
 
-      listScale.appendChild(elScale);
+      gamepadList.appendChild(elScale);
     });
 
     //Note
@@ -168,13 +195,13 @@ function createList(items, type) {
       el.addEventListener('click', e => {
         selectItem(e);
       });
-      modal.appendChild(el);
+      gamepadList.appendChild(el);
     });
   }
 }
 
 function clearModal() {
-  modal.innerHTML = '';
+  gamepadList.innerHTML = '';
 }
 
 function selectItem(e) {
@@ -220,6 +247,7 @@ function closeModal() {
   if (button) {
     changeButtonColor(button.element);
   }
+  gamepadMenu.style.opacity = 0;
   listType = null;
   modal.style.opacity = 0;
   main.style.opacity = 0.8;

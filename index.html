@@ -14,53 +14,61 @@
       <div class="double-bounce2"></div>
     </div>
     <div id="mainScreen">
-      <div id="keySelector">
-        <select>
-          <option value="Cb">Cb</option>
-          <option value="C">C</option>
-          <option value="C#">C#</option>
-          <option value="Db">Db</option>
-          <option value="D">D</option>
-          <option value="Eb">Eb</option>
-          <option value="E">E</option>
-          <option value="F">F</option>
-          <option value="F#">F#</option>
-          <option value="Gb">Gb</option>
-          <option value="G">G</option>
-          <option value="Ab">Ab</option>
-          <option value="A">A</option>
-          <option value="Bb">Bb</option>
-          <option value="B">B</option>
-        </select>
+      <div id="gamepadMenu">
+        <div id="keySelector">
+          <select>
+            <option value="Cb">Cb</option>
+            <option value="C">C</option>
+            <option value="C#">C#</option>
+            <option value="Db">Db</option>
+            <option value="D">D</option>
+            <option value="Eb">Eb</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="F#">F#</option>
+            <option value="Gb">Gb</option>
+            <option value="G">G</option>
+            <option value="Ab">Ab</option>
+            <option value="A">A</option>
+            <option value="Bb">Bb</option>
+            <option value="B">B</option>
+          </select>
+        </div>
+        <br />
+        <div id="scaleSelector">
+          <select>
+            <option value="major">major</option>
+            <option value="minor">minor</option>
+            <option value="dorian#">dorian#</option>
+            <option value="phrygian">phrygian</option>
+            <option value="lydian">lydian</option>
+            <option value="mixolydian">mixolydian</option>
+            <option value="locrian">locrian</option>
+            <option value="majorpentatonic">majorpentatonic</option>
+            <option value="minorpentatonic#">minorpentatonic#</option>
+            <option value="chromatic">chromatic</option>
+            <option value="blues">blues</option>
+            <option value="doubleharmonic">doubleharmonic</option>
+            <option value="flamenco">flamenco</option>
+            <option value="harmonicminor">harmonicminor</option>
+            <option value="melodicminor">melodicminor</option>
+            <option value="wholetone">wholetone</option>
+          </select>
+        </div>
+        <div class="listWrapper">
+          <div id="noteBtn" class="gamepadBtn"><div>note</div></div>
+          <div id="chordBtn" class="gamepadBtn"><div>chord</div></div>
+          <div id="majorBtn" class="gamepadBtn"><div>major</div></div>
+          <div id="minorBtn" class="gamepadBtn"><div>minor</div></div>
+          <ul id="gamepadList" class="gamepad-list"></ul>
+        </div>
       </div>
-
-      <div id="scaleSelector">
-        <select>
-          <option value="major">major</option>
-          <option value="minor">minor</option>
-          <option value="dorian#">dorian#</option>
-          <option value="phrygian">phrygian</option>
-          <option value="lydian">lydian</option>
-          <option value="mixolydian">mixolydian</option>
-          <option value="locrian">locrian</option>
-          <option value="majorpentatonic">majorpentatonic</option>
-          <option value="minorpentatonic#">minorpentatonic#</option>
-          <option value="chromatic">chromatic</option>
-          <option value="blues">blues</option>
-          <option value="doubleharmonic">doubleharmonic</option>
-          <option value="flamenco">flamenco</option>
-          <option value="harmonicminor">harmonicminor</option>
-          <option value="melodicminor">melodicminor</option>
-          <option value="wholetone">wholetone</option>
-        </select>
-      </div>
-      <div id="modal"></div>
 
       <!-- drum synthesizer -->
       <div id="drumMenuOpenBtn" class="drum-menu-btn">drum sound</div>
       <div class="drum-menu" id="drumMenu">
         <div class="close-btn" id="drumMenuCloseBtn">&times;</div>
-        <div>
+        <div id="firstDrumNode">
           <span class="input-label">gain volume</span>
           <input
             type="range"
