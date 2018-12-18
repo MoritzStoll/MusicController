@@ -79,7 +79,6 @@ function createList(items, type) {
     keySelector.style.opacity = 1;
     scaleSelection.removeAttribute('disabled');
     keySeletion.removeAttribute('disabled');
-    console.log(keySelector);
     modal.style.display = 'flex';
 
     let divScale = document.createElement('div');
@@ -175,6 +174,12 @@ function createList(items, type) {
       listNotes.appendChild(elNotes);
     });
   } else {
+    if (type === 'note') {
+      scaleSelector.style.opacity = 1;
+      keySelector.style.opacity = 1;
+      scaleSelection.removeAttribute('disabled');
+      keySeletion.removeAttribute('disabled');
+    }
     items.forEach((item, i) => {
       let el = document.createElement('li');
       el.innerHTML = item;
