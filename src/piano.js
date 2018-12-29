@@ -21,27 +21,27 @@ var filterSlider;
 let pianoCompSwitch, pianoEqSwitch;
 let pianoCompSlider, pianoEqSlider;
 
-var compActive = true, eqActive = true;
-pianoCompSwitch = document.getElementById('pianoCompSwitch').children[0]
-pianoEqSwitch = document.getElementById('pianoEqSwitch').children[0]
+var compActive = false,
+  eqActive = false;
+pianoCompSwitch = document.getElementById('pianoCompSwitch').children[0];
+pianoEqSwitch = document.getElementById('pianoEqSwitch').children[0];
 
 pianoCompSlider = document.getElementById('pianoCompressorSlider');
 pianoEqSlider = document.getElementById('pianoEqualizerSlider');
 console.log(pianoCompSlider, pianoEqSlider);
 
-pianoCompSwitch.addEventListener("change", () => {
+pianoCompSwitch.addEventListener('change', () => {
   compActive = !compActive;
-  pianoSwitches(compActive)
+  pianoSwitches(compActive);
 });
 
-pianoEqSwitch.addEventListener("change", () => {
+pianoEqSwitch.addEventListener('change', () => {
   eqActive = !eqActive;
-  pianoSwitches(eqActive)
+  pianoSwitches(eqActive);
 });
 
-
-pianoCompSwitch.checked = true;
-pianoEqSwitch.checked = true;
+pianoCompSwitch.checked = false;
+pianoEqSwitch.checked = false;
 let notesWhite = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
 let notesBlack = ['C#', 'D#', 'F#', 'G#', 'A#'];
 let sameNotes = {
@@ -125,7 +125,7 @@ function init() {
 
   //Create Equalizer
   filter = context.createBiquadFilter();
-  filter.type ="lowpass";
+  filter.type = 'lowpass';
   filter.frequency.value = 500;
   filter.detune.value = 30;
   filter.Q.value = 1;
@@ -137,8 +137,6 @@ function init() {
       filter[e.srcElement.id].value = e.srcElement.value;
     });
   }
-
-
 
   //create piano sounds
   piano = new Tone.Sampler(
@@ -162,9 +160,7 @@ function init() {
     }
   ).connect(gainNode);
   gainNode.connect(distortion);
-  distortion.connect(compressor);
-  compressor.connect(filter);
-  filter.toMaster();
+  distortion.toMaster();
 }
 
 function changeGain(value) {
@@ -178,10 +174,10 @@ function playNote(note) {
       var note2 = note.slice(0, 2);
       console.log(sameNotes[note2] + note[2]);
       key = document.getElementById(sameNotes[note2] + note[2]);
-      console.log("Key",key);
+      console.log('Key', key);
     } else {
       key = document.getElementById(note);
-      console.log(key)
+      console.log(key);
     }
     key.style.opacity = 0.5;
 
@@ -215,35 +211,27 @@ function makeDistortionCurve(amount) {
   return curve;
 }
 
-
 function pianoSwitches(checkedSwitch) {
-  
   if (compActive && eqActive) {
     gainNode.connect(distortion);
     distortion.connect(compressor);
     compressor.connect(filter);
     filter.toMaster();
-
   } else if (!compActive && !eqActive) {
-    compressor.disconnect()
-    filter.disconnect()
+    compressor.disconnect();
+    filter.disconnect();
     gainNode.connect(distortion);
     distortion.toMaster();
-
   } else if (!compActive && eqActive) {
-    compressor.disconnect()
+    compressor.disconnect();
     gainNode.connect(distortion);
     distortion.connect(filter);
     filter.toMaster();
-
   } else if (compActive && !eqActive) {
-    filter.disconnect()
+    filter.disconnect();
     gainNode.connect(distortion);
     distortion.connect(compressor);
     compressor.toMaster();
-  
   }
-  console.log(checkedSwitch.parentNode.id)
+  console.log(checkedSwitch.parentNode.id);
 }
-
-

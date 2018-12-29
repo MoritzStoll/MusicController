@@ -17,23 +17,23 @@ var filterDrumsSlider;
 
 let drumCompSwitch, drumEqSwitch;
 
-var compActive = true, eqActive = true;
-drumCompSwitch = document.getElementById('drumCompSwitch').children[0]
-drumEqSwitch = document.getElementById('drumEqSwitch').children[0]
+var compActive = false,
+  eqActive = false;
+drumCompSwitch = document.getElementById('drumCompSwitch').children[0];
+drumEqSwitch = document.getElementById('drumEqSwitch').children[0];
 
-drumCompSwitch.checked = true;
-drumEqSwitch.checked = true;
+drumCompSwitch.checked = false;
+drumEqSwitch.checked = false;
 
-drumCompSwitch.addEventListener("change", () => {
+drumCompSwitch.addEventListener('change', () => {
   compActive = !compActive;
-  drumSwitches(drumCompSwitch, compActive)
+  drumSwitches(drumCompSwitch, compActive);
 });
 
-drumEqSwitch.addEventListener("change", () => {
+drumEqSwitch.addEventListener('change', () => {
   eqActive = !eqActive;
-  drumSwitches(drumEqSwitch, eqActive)
+  drumSwitches(drumEqSwitch, eqActive);
 });
-
 
 //create piano gain with default value = 1
 gainNodeDrums = context.createGain();
@@ -85,10 +85,8 @@ for (let i = 0; i < filterDrumsSlider.length; i++) {
 }
 
 reverb.connect(gainNodeDrums);
-gainNodeDrums.connect(compressorDrums);
-compressorDrums.connect(distortionDrums);
-distortionDrums.connect(filterDrums);
-filterDrums.toMaster();
+gainNodeDrums.connect(distortionDrums);
+distortionDrums.toMaster();
 
 let ready = false;
 const TIME_HUMANIZATION = 0.01;
@@ -385,31 +383,26 @@ function createSeedPattern() {
 }
 
 function drumSwitches(checkedSwitch) {
-  
   if (compActive && eqActive) {
     gainNodeDrums.connect(distortionDrums);
     distortionDrums.connect(compressorDrums);
     compressorDrums.connect(filterDrums);
     filterDrums.toMaster();
-
   } else if (!compActive && !eqActive) {
-    compressorDrums.disconnect()
-    filterDrums.disconnect()
+    compressorDrums.disconnect();
+    filterDrums.disconnect();
     gainNodeDrums.connect(distortionDrums);
     distortionDrums.toMaster();
-
   } else if (!compActive && eqActive) {
-    compressorDrums.disconnect()
+    compressorDrums.disconnect();
     gainNodeDrums.connect(distortionDrums);
     distortionDrums.connect(filterDrums);
     filterDrums.toMaster();
-
   } else if (compActive && !eqActive) {
-    filterDrums.disconnect()
+    filterDrums.disconnect();
     gainNodeDrums.connect(distortionDrums);
     distortionDrums.connect(compressorDrums);
     compressorDrums.toMaster();
-  
   }
-  console.log(checkedSwitch.parentNode.id)
+  console.log(checkedSwitch.parentNode.id);
 }
