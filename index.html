@@ -92,7 +92,7 @@
             <h3>DRUM COMPRESSOR</h3>
             <div class="sliderWrapper">
               <label id="drumCompSwitch" class="switch">
-                <input type="checkbox">
+                <input type="checkbox" id="drumCompSwitchInput" />
                 <span class="sliderSwitch" id="dCompSwitch"></span>
               </label>
             </div>
@@ -158,16 +158,16 @@
             />
           </div>
         </div>
-        
+
         <div id="drumEqualizerSlider">
           <div class="instrumentHeader" id="drumEqHead">
-          <h3>DRUM FILTER</h3>
-          <div class="sliderWrapper">
-            <label id="drumEqSwitch" class="switch">
-                <input type="checkbox">
+            <h3>DRUM FILTER</h3>
+            <div class="sliderWrapper">
+              <label id="drumEqSwitch" class="switch">
+                <input type="checkbox" />
                 <span class="sliderSwitch" id="dEqSwitch"></span>
-            </label>
-          </div>
+              </label>
+            </div>
           </div>
           <div>
             <span class="input-label">type</span>
@@ -262,16 +262,16 @@
           />
         </div>
         <div id="pianoCompressorSlider">
-            <div class="instrumentHeader" id="pianoCompHead">
+          <div class="instrumentHeader" id="pianoCompHead">
             <h3>PIANO COMPRESSOR</h3>
-              <div class="sliderWrapper">
-                <label id="pianoCompSwitch" class="switch">
-                  <input type="checkbox">
-                  <span class="sliderSwitch" id="pCompSwitch"></span>
-                </label>
-              </div>
+            <div class="sliderWrapper">
+              <label id="pianoCompSwitch" class="switch">
+                <input type="checkbox" id="pianoCompSwitchInput" />
+                <span class="sliderSwitch" id="pCompSwitch"></span>
+              </label>
             </div>
-            <div>
+          </div>
+          <div>
             <span class="input-label">threshold</span>
             <input
               type="range"
@@ -337,7 +337,7 @@
             <h3>PIANO FILTER</h3>
             <div class="sliderWrapper">
               <label id="pianoEqSwitch" class="switch">
-                <input type="checkbox">
+                <input type="checkbox" />
                 <span class="sliderSwitch" id="pEqSwitch"></span>
               </label>
             </div>
@@ -497,12 +497,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/13.3.11/Tone.js"></script>
     <script src="./src/teoria.js" type="text/javascript"></script>
 
-    <script src="./src/gamepad/gamepad.js"></script>
+    <script src="./src/gamepad.js"></script>
     <script src="./src/pianoConfig.js"></script>
     <script src="./src/viewController.js"></script>
     <script src="./src/teoria.js"></script>
     <script src="./src/piano.js"></script>
     <script src="./src/drums.js"></script>
-    <script src="./src/synthFunctions.js"></script>
   </body>
 </html>

@@ -3,35 +3,30 @@
     "element": null,
     "id": "r2",
     "index": null,
-
     "gamepadKeyIndex": 7,
     "defaultColor": "#48709B",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "r1",
     "index": null,
-
     "gamepadKeyIndex": 5,
     "defaultColor": "#304E75",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "l2",
     "index": null,
-
     "gamepadKeyIndex": 6,
     "defaultColor": "#48709B",
     "setupColor": "#fff",
@@ -42,182 +37,156 @@
     "element": null,
     "id": "l1",
     "index": null,
-
     "gamepadKeyIndex": 4,
     "defaultColor": "#304E75",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "joystickLeft",
     "index": null,
-
     "gamepadKeyIndex": 10,
     "defaultColor": "#629ACC",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": {"chord": "CbM", "octaveNumber": "4"},
-    "synthesizer": null
+    "chord": { "chord": "CbM", "octaveNumber": "4" }
   },
   {
     "element": null,
     "id": "joystickRight",
     "index": null,
-
     "gamepadKeyIndex": 11,
     "defaultColor": "#629ACC",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "leftUp",
     "index": null,
-
     "gamepadKeyIndex": 12,
     "defaultColor": "#304E75",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "leftRight",
     "index": null,
-
     "gamepadKeyIndex": 15,
     "defaultColor": "#304E75",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "leftDown",
     "index": null,
-
     "gamepadKeyIndex": 13,
     "defaultColor": "#304E75",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "leftLeft",
     "index": null,
-
     "gamepadKeyIndex": 14,
     "defaultColor": "#304E75",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "buttonUp",
     "index": null,
-
     "gamepadKeyIndex": 3,
     "defaultColor": "#629ACC",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "buttonRight",
     "index": null,
-
     "gamepadKeyIndex": 1,
     "defaultColor": "#629ACC",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "buttonDown",
     "index": null,
-
     "gamepadKeyIndex": 0,
     "defaultColor": "#629ACC",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "buttonLeft",
     "index": null,
-
     "gamepadKeyIndex": 2,
     "defaultColor": "#629ACC",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "option",
     "index": null,
-
     "gamepadKeyIndex": 8,
     "defaultColor": "#304E75",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   },
   {
     "element": null,
     "id": "play",
     "index": null,
-
     "gamepadKeyIndex": 9,
     "defaultColor": "#304E75",
     "setupColor": "#fff",
     "readyColor": null,
     "playColor": "purple",
     "note": null,
-    "chord": null,
-    "synthesizer": null
+    "chord": null
   }
 ]

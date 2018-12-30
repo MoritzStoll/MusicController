@@ -1,4 +1,3 @@
-createEventListener()
 /*
 These are the states needed for the pianoConfiguration
 */
@@ -22,7 +21,7 @@ function getPianoConfigDOMObjects() {
     scaleSelection: document.getElementById('scaleSelection'),
     main: document.getElementById('main'),
     octaveSlider: document.getElementById('octaveNumber'),
-    pianoSVG:  document.getElementById('piano'),
+    pianoSVG: document.getElementById('piano'),
     gamepadMenuCloseBtn: document.getElementById('gamepadMenuCloseBtn')
   };
   return pianoConfigDOMObjects;
@@ -59,7 +58,7 @@ function getChordBuilder() {
       ]
     }
   };
-  return chordBuilder;  
+  return chordBuilder;
 }
 
 /*
@@ -72,25 +71,24 @@ function createEventListener() {
   domObjects.octaveSlider.addEventListener('input', e => {
     configStates.octaveNumber = e.target.value;
   });
-  
+
   domObjects.keySelector.addEventListener('input', () => {
     createList(chordBuilder, configStates.listType);
   });
-  
+
   domObjects.scaleSelector.addEventListener('input', () => {
     createList(chordBuilder, configStates.listType);
   });
-  
+
   domObjects.gamepadMenuCloseBtn.addEventListener('click', () => {
     closeModal();
   });
-  
 }
 /*
 Opens the dropdown selection for the tones on the controller buttons
 */
 function openDropdown(btn) {
-  let domObjects = getPianoConfigDOMObjects()
+  let domObjects = getPianoConfigDOMObjects();
   domObjects.gamepadMenuCloseBtn.style.visibility = 'visible';
   configStates.button = btn;
   domObjects.modal.style.display = 'unset';
@@ -106,14 +104,13 @@ function openDropdown(btn) {
 Creates the different lists. If the listtype is chord the list has to be build up different.
 */
 function createList(items, type) {
-  console.log(type)
-  let domObjects = getPianoConfigDOMObjects()
+  console.log(type);
+  let domObjects = getPianoConfigDOMObjects();
   //create the Scale based on the scale and key selection
   var keyBasedScale = teoria
     .note(domObjects.keySelector.childNodes[1].value)
     .scale(domObjects.scaleSelector.childNodes[1].value);
   clearModal();
-
 
   if (type == 'chord') {
     //If the type of the current list is chord the scaleSelector and keySelector are enabled
@@ -122,7 +119,7 @@ function createList(items, type) {
     domObjects.scaleSelection.removeAttribute('disabled');
     domObjects.keySelection.removeAttribute('disabled');
     domObjects.modal.style.display = 'flex';
-    
+
     //Divs for the scale and the note selection are created and appended to the modal
     let divScale = document.createElement('div');
     let divNotes = document.createElement('div');
@@ -137,7 +134,7 @@ function createList(items, type) {
 
     domObjects.modal.appendChild(divScale);
     domObjects.modal.appendChild(divNotes);
-    
+
     //Scale selection is created
     let titleScale = document.createElement('h3');
     titleScale.innerHTML = items.scale.id;
@@ -169,7 +166,7 @@ function createList(items, type) {
       listScale.appendChild(elScale);
     });
 
-    //Note selection is created 
+    //Note selection is created
     let titleNotes = document.createElement('h3');
     titleNotes.innerHTML = items.notes.id;
     titleNotes.id = `titleNotes_${items.notes.id}`;
@@ -188,7 +185,7 @@ function createList(items, type) {
       elNotes.id = `item_${i}`;
 
       //as long as item is not the chord or note selection button check if the note or chord is in the keyBasedScale
-      //if yes --> highlight it 
+      //if yes --> highlight it
       if (item != 'chord' && item != 'note') {
         if (
           keyBasedScale.simple().includes(item.toLowerCase()) ||
@@ -232,14 +229,14 @@ function createList(items, type) {
       domObjects.scaleSelection.removeAttribute('disabled');
       domObjects.keySelection.removeAttribute('disabled');
     }
-    //create list item for each item in given items 
+    //create list item for each item in given items
     items.forEach((item, i) => {
       let el = document.createElement('li');
       el.innerHTML = item;
       el.id = `item_${i}`;
-      
+
       //as long as item is not the chord or note selection button check if the note or chord is in the keyBasedScale
-      //if yes --> highlight it 
+      //if yes --> highlight it
       if (item != 'chord' && item != 'note') {
         if (
           keyBasedScale.simple().includes(item.toLowerCase()) ||
@@ -293,14 +290,24 @@ function selectItem(e) {
           configStates.currentChord[1] = item;
           break;
         default:
-          //only excecuted if the selection wasn't for chord selection. Note sound is set an modal closed 
-          setSound(configStates.listType, item, configStates.octaveNumber, configStates.button);
+          //only excecuted if the selection wasn't for chord selection. Note sound is set an modal closed
+          setSound(
+            configStates.listType,
+            item,
+            configStates.octaveNumber,
+            configStates.button
+          );
           closeModal();
           break;
       }
       //if both chord parts are chosen the chord sound is set in gamepad.js and modal is closed
       if (configStates.currentChord[0] && configStates.currentChord[1]) {
-        setSound(configStates.listType, configStates.currentChord, configStates.octaveNumber, configStates.button);
+        setSound(
+          configStates.listType,
+          configStates.currentChord,
+          configStates.octaveNumber,
+          configStates.button
+        );
         configStates.currentChord = new Array(2);
         closeModal();
       } else {
@@ -314,7 +321,7 @@ function selectItem(e) {
 Closes Modal
 */
 function closeModal() {
-  let domObjects = getPianoConfigDOMObjects()
+  let domObjects = getPianoConfigDOMObjects();
   if (configStates.button) {
     changeButtonColor(configStates.button.element);
   }

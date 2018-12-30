@@ -1,241 +1,287 @@
-let Tone = mm.Player.tone;
-let sampleBaseUrl = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699';
-let reverb = new Tone.Convolver(`${sampleBaseUrl}/small-drum-room.wav`);
-reverb.wet.value = 0.35;
+TIME_HUMANIZATION = 0.01;
 
-var context = Tone.context;
-var piano;
-var gainNodeDrums;
-var gainSlider;
-var compressor;
-var compressorSlider;
-var distortionDrums;
-var distortionSlider;
+var state,
+  Tone,
+  sampleBaseUrl,
+  reverb,
+  context,
+  gainNodeDrums,
+  gainSlider,
+  compressor,
+  compressorSlider,
+  distortionDrums,
+  distortionSlider,
+  filterDrums,
+  filterDrumsSlider,
+  drumCompSwitch,
+  drumEqSwitch,
+  drumMenu,
+  compActive,
+  eqActive,
+  ready,
+  midiDrums,
+  reverseMidiMapping,
+  snarePanner,
+  outputs,
+  drumKit,
+  temperature,
+  rnn,
+  pattern,
+  clock,
+  stepCounter,
+  oneEighth;
 
-var filterDrums;
-var filterDrumsSlider;
-
-let drumCompSwitch, drumEqSwitch;
-
-var compActive = false,
+function initDrums() {
+  //init global variables
+  state = {
+    patternLength: 32,
+    seedLength: 4,
+    swing: 0.55,
+    pattern: null,
+    tempo: 120,
+    startSeed: [[0], [], [2], []]
+  };
+  Tone = mm.Player.tone;
+  sampleBaseUrl = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/969699';
+  reverb = new Tone.Convolver(`${sampleBaseUrl}/small-drum-room.wav`);
+  reverb.wet.value = 0.35;
+  context = Tone.context;
+  compActive = false;
   eqActive = false;
-drumCompSwitch = document.getElementById('drumCompSwitch').children[0];
-drumEqSwitch = document.getElementById('drumEqSwitch').children[0];
+  ready = false;
 
-drumCompSwitch.checked = false;
-drumEqSwitch.checked = false;
+  //drumMenu for postion of pattern
+  drumMenu = document.getElementById('drumMenu');
 
-drumCompSwitch.addEventListener('change', () => {
-  compActive = !compActive;
-  drumSwitches(drumCompSwitch, compActive);
-});
+  //init seed pattern for drums
+  createSeedPattern();
 
-drumEqSwitch.addEventListener('change', () => {
-  eqActive = !eqActive;
-  drumSwitches(drumEqSwitch, eqActive);
-});
+  //drum active switch for eq and compressor
+  drumCompSwitch = document.getElementById('drumCompSwitch').children[0];
+  drumEqSwitch = document.getElementById('drumEqSwitch').children[0];
+  drumCompSwitch.checked = false;
+  drumEqSwitch.checked = false;
 
-//create piano gain with default value = 1
-gainNodeDrums = context.createGain();
-gainNodeDrums.gain.value = 1;
-gainSlider = document.getElementById('drumGain');
-gainSlider.addEventListener('input', e => {
-  gainNodeDrums.gain.value = e.srcElement.value;
-  console.log(gainNodeDrums.gain.value);
-});
-
-//create piano compressor with default values
-compressorDrums = context.createDynamicsCompressor();
-compressorDrums.threshold.value = -24;
-compressorDrums.ratio.value = 12;
-compressorDrums.knee.value = 30;
-compressorDrums.attack.value = 0.003;
-compressorDrums.release.value = 0.25;
-compressorSlider = document.getElementById('drumCompressorSlider').children;
-
-for (let i = 0; i < compressorSlider.length; i++) {
-  compressorSlider[i].addEventListener('input', e => {
-    compressorDrums[e.srcElement.id].value = e.srcElement.value;
+  //drums active switch listener
+  drumCompSwitch.addEventListener('change', () => {
+    compActive = !compActive;
+    drumSwitches(drumCompSwitch, compActive);
   });
-}
-
-//create piano distortionDrums
-distortionDrums = context.createWaveShaper();
-distortionDrums.curve = makeDistortionCurve(0);
-distortionDrums.oversample = '4x';
-distortionSlider = document.getElementById('drumDistortion');
-
-distortionSlider.addEventListener('input', e => {
-  distortionDrums.curve = makeDistortionCurve(parseInt(e.srcElement.value));
-});
-
-//create drum Equalizer
-filterDrums = context.createBiquadFilter();
-filterDrums.type = 'lowpass';
-filterDrums.frequency.value = 500;
-filterDrums.detune.value = 30;
-filterDrums.Q.value = 1;
-filterDrums.gain.value = 25;
-
-filterDrumsSlider = document.getElementById('drumEqualizerSlider').children;
-for (let i = 0; i < filterDrumsSlider.length; i++) {
-  filterDrumsSlider[i].addEventListener('input', e => {
-    filterDrums[e.srcElement.id].value = e.srcElement.value;
+  drumEqSwitch.addEventListener('change', () => {
+    eqActive = !eqActive;
+    drumSwitches(drumEqSwitch, eqActive);
   });
-}
 
-reverb.connect(gainNodeDrums);
-gainNodeDrums.connect(distortionDrums);
-distortionDrums.toMaster();
+  //create drum gain with default value = 1
+  gainNodeDrums = context.createGain();
+  gainNodeDrums.gain.value = 1;
+  gainSlider = document.getElementById('drumGain');
+  gainSlider.addEventListener('input', e => {
+    gainNodeDrums.gain.value = e.srcElement.value;
+  });
 
-let ready = false;
-const TIME_HUMANIZATION = 0.01;
+  //create drum compressor with default values
+  compressorDrums = context.createDynamicsCompressor();
+  compressorDrums.threshold.value = -24;
+  compressorDrums.ratio.value = 12;
+  compressorDrums.knee.value = 30;
+  compressorDrums.attack.value = 0.003;
+  compressorDrums.release.value = 0.25;
+  compressorSlider = document.getElementById('drumCompressorSlider').children;
 
-let midiDrums = [36, 38, 42, 46, 41, 43, 45, 49, 51];
-let reverseMidiMapping = new Map([
-  [36, 0],
-  [35, 0],
-  [38, 1],
-  [27, 1],
-  [28, 1],
-  [31, 1],
-  [32, 1],
-  [33, 1],
-  [34, 1],
-  [37, 1],
-  [39, 1],
-  [40, 1],
-  [56, 1],
-  [65, 1],
-  [66, 1],
-  [75, 1],
-  [85, 1],
-  [42, 2],
-  [44, 2],
-  [54, 2],
-  [68, 2],
-  [69, 2],
-  [70, 2],
-  [71, 2],
-  [73, 2],
-  [78, 2],
-  [80, 2],
-  [46, 3],
-  [67, 3],
-  [72, 3],
-  [74, 3],
-  [79, 3],
-  [81, 3],
-  [45, 4],
-  [29, 4],
-  [41, 4],
-  [61, 4],
-  [64, 4],
-  [84, 4],
-  [48, 5],
-  [47, 5],
-  [60, 5],
-  [63, 5],
-  [77, 5],
-  [86, 5],
-  [87, 5],
-  [50, 6],
-  [30, 6],
-  [43, 6],
-  [62, 6],
-  [76, 6],
-  [83, 6],
-  [49, 7],
-  [55, 7],
-  [57, 7],
-  [58, 7],
-  [51, 8],
-  [52, 8],
-  [53, 8],
-  [59, 8],
-  [82, 8]
-]);
-let snarePanner = new Tone.Panner().connect(reverb);
-
-new Tone.LFO(0.13, -0.25, 0.25).connect(snarePanner.pan).start();
-
-let outputs = {
-  internal: {
-    play: (drumIdx, velocity, time) => {
-      drumKit[drumIdx].get(velocity).start(time);
-    }
+  for (let i = 0; i < compressorSlider.length; i++) {
+    compressorSlider[i].addEventListener('input', e => {
+      //ignore active switch checkbox input
+      e.srcElement.id !== 'drumCompSwitchInput'
+        ? (compressorDrums[e.srcElement.id].value = e.srcElement.value)
+        : null;
+    });
   }
-};
 
-let drumKit = [
-  new Tone.Players({
-    high: `${sampleBaseUrl}/808-kick-vh.mp3`,
-    med: `${sampleBaseUrl}/808-kick-vm.mp3`,
-    low: `${sampleBaseUrl}/808-kick-vl.mp3`
-  }).connect(gainNodeDrums),
-  new Tone.Players({
-    high: `${sampleBaseUrl}/flares-snare-vh.mp3`,
-    med: `${sampleBaseUrl}/flares-snare-vm.mp3`,
-    low: `${sampleBaseUrl}/flares-snare-vl.mp3`
-  }).connect(snarePanner),
-  new Tone.Players({
-    high: `${sampleBaseUrl}/808-hihat-vh.mp3`,
-    med: `${sampleBaseUrl}/808-hihat-vm.mp3`,
-    low: `${sampleBaseUrl}/808-hihat-vl.mp3`
-  }).connect(new Tone.Panner(-0.5).connect(reverb)),
-  new Tone.Players({
-    high: `${sampleBaseUrl}/808-hihat-open-vh.mp3`,
-    med: `${sampleBaseUrl}/808-hihat-open-vm.mp3`,
-    low: `${sampleBaseUrl}/808-hihat-open-vl.mp3`
-  }).connect(new Tone.Panner(-0.5).connect(reverb)),
-  new Tone.Players({
-    high: `${sampleBaseUrl}/slamdam-tom-low-vh.mp3`,
-    med: `${sampleBaseUrl}/slamdam-tom-low-vm.mp3`,
-    low: `${sampleBaseUrl}/slamdam-tom-low-vl.mp3`
-  }).connect(new Tone.Panner(-0.4).connect(reverb)),
-  new Tone.Players({
-    high: `${sampleBaseUrl}/slamdam-tom-mid-vh.mp3`,
-    med: `${sampleBaseUrl}/slamdam-tom-mid-vm.mp3`,
-    low: `${sampleBaseUrl}/slamdam-tom-mid-vl.mp3`
-  }).connect(reverb),
-  new Tone.Players({
-    high: `${sampleBaseUrl}/slamdam-tom-high-vh.mp3`,
-    med: `${sampleBaseUrl}/slamdam-tom-high-vm.mp3`,
-    low: `${sampleBaseUrl}/slamdam-tom-high-vl.mp3`
-  }).connect(new Tone.Panner(0.4).connect(reverb)),
-  new Tone.Players({
-    high: `${sampleBaseUrl}/909-clap-vh.mp3`,
-    med: `${sampleBaseUrl}/909-clap-vm.mp3`,
-    low: `${sampleBaseUrl}/909-clap-vl.mp3`
-  }).connect(new Tone.Panner(0.5).connect(reverb)),
-  new Tone.Players({
-    high: `${sampleBaseUrl}/909-rim-vh.wav`,
-    med: `${sampleBaseUrl}/909-rim-vm.wav`,
-    low: `${sampleBaseUrl}/909-rim-vl.wav`
-  }).connect(new Tone.Panner(0.5).connect(reverb))
-];
+  //create drum distortionDrums
+  distortionDrums = context.createWaveShaper();
+  distortionDrums.curve = makeDistortionCurve(0);
+  distortionDrums.oversample = '4x';
+  distortionSlider = document.getElementById('drumDistortion');
 
-let temperature = 1.0;
-let rnn = new mm.MusicRNN(
-  'https://storage.googleapis.com/download.magenta.tensorflow.org/tfjs_checkpoints/music_rnn/drum_kit_rnn'
-);
+  distortionSlider.addEventListener('input', e => {
+    distortionDrums.curve = makeDistortionCurve(parseInt(e.srcElement.value));
+  });
 
-rnn.initialize().then(() => {
-  ready = true;
-  stopLoading();
-  start();
-});
+  //create drum Equalizer
+  filterDrums = context.createBiquadFilter();
+  filterDrums.type = 'lowpass';
+  filterDrums.frequency.value = 500;
+  filterDrums.detune.value = 30;
+  filterDrums.Q.value = 1;
+  filterDrums.gain.value = 25;
 
-let state = {
-  patternLength: 32,
-  seedLength: 4,
-  swing: 0.55,
-  pattern: null, //35 columns
-  tempo: 120,
-  startSeed: [[0], [], [2], []]
-};
+  //compressor slider listener
+  filterDrumsSlider = document.getElementById('drumEqualizerSlider').children;
+  for (let i = 0; i < filterDrumsSlider.length; i++) {
+    filterDrumsSlider[i].addEventListener('input', e => {
+      filterDrums[e.srcElement.id].value = e.srcElement.value;
+    });
+  }
 
-function start() {
+  //connect drum rever, gain & distortion
+  reverb.connect(gainNodeDrums);
+  gainNodeDrums.connect(distortionDrums);
+  distortionDrums.toMaster();
+
+  //create drum machine
+  midiDrums = [36, 38, 42, 46, 41, 43, 45, 49, 51];
+  reverseMidiMapping = new Map([
+    [36, 0],
+    [35, 0],
+    [38, 1],
+    [27, 1],
+    [28, 1],
+    [31, 1],
+    [32, 1],
+    [33, 1],
+    [34, 1],
+    [37, 1],
+    [39, 1],
+    [40, 1],
+    [56, 1],
+    [65, 1],
+    [66, 1],
+    [75, 1],
+    [85, 1],
+    [42, 2],
+    [44, 2],
+    [54, 2],
+    [68, 2],
+    [69, 2],
+    [70, 2],
+    [71, 2],
+    [73, 2],
+    [78, 2],
+    [80, 2],
+    [46, 3],
+    [67, 3],
+    [72, 3],
+    [74, 3],
+    [79, 3],
+    [81, 3],
+    [45, 4],
+    [29, 4],
+    [41, 4],
+    [61, 4],
+    [64, 4],
+    [84, 4],
+    [48, 5],
+    [47, 5],
+    [60, 5],
+    [63, 5],
+    [77, 5],
+    [86, 5],
+    [87, 5],
+    [50, 6],
+    [30, 6],
+    [43, 6],
+    [62, 6],
+    [76, 6],
+    [83, 6],
+    [49, 7],
+    [55, 7],
+    [57, 7],
+    [58, 7],
+    [51, 8],
+    [52, 8],
+    [53, 8],
+    [59, 8],
+    [82, 8]
+  ]);
+  snarePanner = new Tone.Panner().connect(reverb);
+  new Tone.LFO(0.13, -0.25, 0.25).connect(snarePanner.pan).start();
+  outputs = {
+    internal: {
+      play: (drumIdx, velocity, time) => {
+        drumKit[drumIdx].get(velocity).start(time);
+      }
+    }
+  };
+
+  //init drum sounds
+  drumKit = [
+    new Tone.Players({
+      high: `${sampleBaseUrl}/808-kick-vh.mp3`,
+      med: `${sampleBaseUrl}/808-kick-vm.mp3`,
+      low: `${sampleBaseUrl}/808-kick-vl.mp3`
+    }).connect(gainNodeDrums),
+    new Tone.Players({
+      high: `${sampleBaseUrl}/flares-snare-vh.mp3`,
+      med: `${sampleBaseUrl}/flares-snare-vm.mp3`,
+      low: `${sampleBaseUrl}/flares-snare-vl.mp3`
+    }).connect(snarePanner),
+    new Tone.Players({
+      high: `${sampleBaseUrl}/808-hihat-vh.mp3`,
+      med: `${sampleBaseUrl}/808-hihat-vm.mp3`,
+      low: `${sampleBaseUrl}/808-hihat-vl.mp3`
+    }).connect(new Tone.Panner(-0.5).connect(reverb)),
+    new Tone.Players({
+      high: `${sampleBaseUrl}/808-hihat-open-vh.mp3`,
+      med: `${sampleBaseUrl}/808-hihat-open-vm.mp3`,
+      low: `${sampleBaseUrl}/808-hihat-open-vl.mp3`
+    }).connect(new Tone.Panner(-0.5).connect(reverb)),
+    new Tone.Players({
+      high: `${sampleBaseUrl}/slamdam-tom-low-vh.mp3`,
+      med: `${sampleBaseUrl}/slamdam-tom-low-vm.mp3`,
+      low: `${sampleBaseUrl}/slamdam-tom-low-vl.mp3`
+    }).connect(new Tone.Panner(-0.4).connect(reverb)),
+    new Tone.Players({
+      high: `${sampleBaseUrl}/slamdam-tom-mid-vh.mp3`,
+      med: `${sampleBaseUrl}/slamdam-tom-mid-vm.mp3`,
+      low: `${sampleBaseUrl}/slamdam-tom-mid-vl.mp3`
+    }).connect(reverb),
+    new Tone.Players({
+      high: `${sampleBaseUrl}/slamdam-tom-high-vh.mp3`,
+      med: `${sampleBaseUrl}/slamdam-tom-high-vm.mp3`,
+      low: `${sampleBaseUrl}/slamdam-tom-high-vl.mp3`
+    }).connect(new Tone.Panner(0.4).connect(reverb)),
+    new Tone.Players({
+      high: `${sampleBaseUrl}/909-clap-vh.mp3`,
+      med: `${sampleBaseUrl}/909-clap-vm.mp3`,
+      low: `${sampleBaseUrl}/909-clap-vl.mp3`
+    }).connect(new Tone.Panner(0.5).connect(reverb)),
+    new Tone.Players({
+      high: `${sampleBaseUrl}/909-rim-vh.wav`,
+      med: `${sampleBaseUrl}/909-rim-vm.wav`,
+      low: `${sampleBaseUrl}/909-rim-vl.wav`
+    }).connect(new Tone.Panner(0.5).connect(reverb))
+  ];
+
+  //drum note type
+  oneEighth = Tone.Time('8n').toSeconds();
+
+  //drum sound temperature
+  temperature = 1.0;
+
+  //drum seed pazzern
+  pattern = [[], [], [], []];
+
+  //drum play clock
+  clock = new Tone.Clock(function(time) {
+    tick();
+  }, 4);
+  stepCounter = 0;
+
+  //init music ai
+  rnn = new mm.MusicRNN(
+    'https://storage.googleapis.com/download.magenta.tensorflow.org/tfjs_checkpoints/music_rnn/drum_kit_rnn'
+  );
+
+  //stop loading screen if ai is ready
+  rnn.initialize().then(() => {
+    ready = true;
+    stopLoading();
+    startDrumMachine();
+  });
+}
+
+function startDrumMachine() {
   state.pattern = state.startSeed.concat(_.times(state.patternLength, i => []));
   let seed = _.take(state.pattern, state.seedLength);
   return generatePattern(seed, state.patternLength - seed.length).then(
@@ -260,9 +306,6 @@ function getStepVelocity(step) {
   }
 }
 
-let stepCounter = 0;
-let oneEighth = Tone.Time('8n').toSeconds();
-
 function tick(time = Tone.now() - Tone.context.lookAhead) {
   if (_.isNumber(stepCounter) && state.pattern) {
     stepCounter++;
@@ -280,10 +323,6 @@ function tick(time = Tone.now() - Tone.context.lookAhead) {
     });
   }
 }
-
-var clock = new Tone.Clock(function(time) {
-  tick();
-}, 4);
 
 function playDrums() {
   ready && clock.start();
@@ -342,9 +381,7 @@ function setSeedPattern(pattern) {
   state.startSeed = pattern;
   start();
 }
-let pattern = [[], [], [], []];
 
-createSeedPattern();
 function createSeedPattern() {
   pattern = state.startSeed;
   let container = document.createElement('div');
@@ -404,5 +441,4 @@ function drumSwitches(checkedSwitch) {
     distortionDrums.connect(compressorDrums);
     compressorDrums.toMaster();
   }
-  console.log(checkedSwitch.parentNode.id);
 }

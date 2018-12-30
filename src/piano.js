@@ -2,80 +2,89 @@ WHITE_KEYS = 21;
 BLACK_KEYS = 15;
 MIN_OCTAVE = 3;
 MAX_OCTAVE = 5;
-let keys = [...document.getElementById('piano').children];
-let white = keys.slice(0, 21);
-let black = keys.slice(21, keys.length);
 
-var context = Tone.context;
-var piano;
-var gainNode;
-var gainSlider;
-var compressor;
-var compressorSlider;
-var distortion;
-var distortionSlider;
+var pianoContext,
+  piano,
+  gainNode,
+  gainSlider,
+  compressor,
+  compressorSlider,
+  distortion,
+  distortionSlider,
+  filter,
+  filterSlider,
+  pianoCompSwitch,
+  pianoEqSwitch,
+  pianoCompSlider,
+  pianoEqslider,
+  compActive,
+  eqActive,
+  notesWhite,
+  notesBlack,
+  sameNotes;
 
-var filter;
-var filterSlider;
-
-let pianoCompSwitch, pianoEqSwitch;
-let pianoCompSlider, pianoEqSlider;
-
-var compActive = false,
+function initPiano() {
+  //init gloabl variables
+  pianoContext = Tone.context;
+  compActive = false;
   eqActive = false;
-pianoCompSwitch = document.getElementById('pianoCompSwitch').children[0];
-pianoEqSwitch = document.getElementById('pianoEqSwitch').children[0];
+  notesWhite = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+  notesBlack = ['C#', 'D#', 'F#', 'G#', 'A#'];
+  sameNotes = {
+    CB: 'B',
+    DB: 'C#',
+    EB: 'D#',
+    FB: 'E',
+    GB: 'F#',
+    AB: 'G#',
+    BB: 'A#',
+    'C#': 'DB',
+    'D#': 'EB',
+    'E#': 'F',
+    'F#': 'GB',
+    'G#': 'AB',
+    'A#': 'BB',
+    'B#': 'C',
+    C: 'C',
+    D: 'D',
+    E: 'E',
+    F: 'F',
+    G: 'G',
+    A: 'A',
+    B: 'B',
+    H: 'B'
+  };
 
-pianoCompSlider = document.getElementById('pianoCompressorSlider');
-pianoEqSlider = document.getElementById('pianoEqualizerSlider');
-console.log(pianoCompSlider, pianoEqSlider);
+  //create array for piano keyboard with 3 octaves
+  let keys = [...document.getElementById('piano').children];
+  let white = keys.slice(0, 21);
+  let black = keys.slice(21, keys.length);
+  white.reverse();
+  black.reverse();
 
-pianoCompSwitch.addEventListener('change', () => {
-  compActive = !compActive;
-  pianoSwitches(compActive);
-});
+  //piano button listeners
+  createEventListener();
 
-pianoEqSwitch.addEventListener('change', () => {
-  eqActive = !eqActive;
-  pianoSwitches(eqActive);
-});
+  //piano active switch for eq and compressor
+  pianoCompSwitch = document.getElementById('pianoCompSwitch').children[0];
+  pianoEqSwitch = document.getElementById('pianoEqSwitch').children[0];
+  pianoCompSwitch.checked = false;
+  pianoEqSwitch.checked = false;
 
-pianoCompSwitch.checked = false;
-pianoEqSwitch.checked = false;
-let notesWhite = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-let notesBlack = ['C#', 'D#', 'F#', 'G#', 'A#'];
-let sameNotes = {
-  CB: 'B',
-  DB: 'C#',
-  EB: 'D#',
-  FB: 'E',
-  GB: 'F#',
-  AB: 'G#',
-  BB: 'A#',
-  'C#': 'DB',
-  'D#': 'EB',
-  'E#': 'F',
-  'F#': 'GB',
-  'G#': 'AB',
-  'A#': 'BB',
-  'B#': 'C',
-  C: 'C',
-  D: 'D',
-  E: 'E',
-  F: 'F',
-  G: 'G',
-  A: 'A',
-  B: 'B',
-  H: 'B'
-};
-window.onload = function() {
-  init();
-};
+  //piano comp & eq slider
+  pianoCompSlider = document.getElementById('pianoCompressorSlider');
+  pianoEqSlider = document.getElementById('pianoEqualizerSlider');
 
-white.reverse();
-black.reverse();
+  //piano active switch listener
+  pianoCompSwitch.addEventListener('change', () => {
+    compActive = !compActive;
+    pianoSwitches(compActive);
+  });
+  pianoEqSwitch.addEventListener('change', () => {
+    eqActive = !eqActive;
+    pianoSwitches(eqActive);
+  });
 
-function init() {
   //piano-key listeners
   for (let i = MIN_OCTAVE; i <= MAX_OCTAVE; i++) {
     white.forEach((key, index) => {
@@ -92,7 +101,7 @@ function init() {
   });
 
   //create piano gain with default value = 1
-  gainNode = context.createGain();
+  gainNode = pianoContext.createGain();
   gainNode.gain.value = 1;
   gainSlider = document.getElementById('pianoGain');
   gainSlider.addEventListener('input', e => {
@@ -100,22 +109,26 @@ function init() {
   });
 
   //create piano compressor with default values
-  compressor = context.createDynamicsCompressor();
+  compressor = pianoContext.createDynamicsCompressor();
   compressor.threshold.value = -24;
   compressor.ratio.value = 12;
   compressor.knee.value = 30;
   compressor.attack.value = 0.003;
   compressor.release.value = 0.25;
-  compressorSlider = document.getElementById('pianoCompressorSlider').children;
 
+  //compressor slider listener
+  compressorSlider = document.getElementById('pianoCompressorSlider').children;
   for (let i = 0; i < compressorSlider.length; i++) {
     compressorSlider[i].addEventListener('input', e => {
-      compressor[e.srcElement.id].value = e.srcElement.value;
+      //ignore active switch checkbox input
+      e.srcElement.id !== 'pianoCompSwitchInput'
+        ? (compressor[e.srcElement.id].value = e.srcElement.value)
+        : null;
     });
   }
 
   //create piano distortion
-  distortion = context.createWaveShaper();
+  distortion = pianoContext.createWaveShaper();
   distortion.curve = makeDistortionCurve(0);
   distortion.oversample = '4x';
   distortionSlider = document.getElementById('pianoDistortion');
@@ -124,13 +137,14 @@ function init() {
   });
 
   //Create Equalizer
-  filter = context.createBiquadFilter();
+  filter = pianoContext.createBiquadFilter();
   filter.type = 'lowpass';
   filter.frequency.value = 500;
   filter.detune.value = 30;
   filter.Q.value = 1;
   filter.gain.value = 25;
 
+  //listener for piano filter slider input
   filterSlider = document.getElementById('pianoEqualizerSlider').children;
   for (let i = 0; i < filterSlider.length; i++) {
     filterSlider[i].addEventListener('input', e => {
@@ -170,10 +184,8 @@ function changeGain(value) {
 function playNote(note) {
   if (note) {
     let key;
-    console.log(note)
     if (note[1] == 'B') {
       var note2 = note.slice(0, 2);
-      console.log(sameNotes[note2] + note[2]);
       key = document.getElementById(sameNotes[note2] + note[2]);
     } else {
       key = document.getElementById(note);
@@ -190,9 +202,7 @@ function playNote(note) {
 function playChord(chord, octaveNumber) {
   if (chord) {
     var c = teoria.chord(chord).simple();
-    console.log(c);
     c.forEach(note => {
-      console.log(note);
       playNote(note.toUpperCase() + octaveNumber);
     });
   }
@@ -232,5 +242,4 @@ function pianoSwitches(checkedSwitch) {
     distortion.connect(compressor);
     compressor.toMaster();
   }
-  console.log(checkedSwitch.parentNode.id);
 }
