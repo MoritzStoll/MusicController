@@ -54,3 +54,8 @@ document.getElementsByTagName('html')[0].addEventListener('mousemove', e => {
   info.style.top = `${e.layerY}px`;
   info.style.left = `${e.layerX + 20}px`;
 });
+
+
+
+
+
