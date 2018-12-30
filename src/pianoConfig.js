@@ -1,3 +1,8 @@
+function initPianoConfig() {
+
+}
+
+
 let modal = document.getElementById('modal');
 let keySelector = document.getElementById('keySelector');
 let main = document.getElementById('main');
@@ -219,7 +224,7 @@ function selectItem(e) {
       break;
     case 'note':
       listType = 'note';
-      createList(noteList, 'note');
+      createList(chordBuilder.notes.value, 'note');
       break;
     default:
       let chordPart = e.srcElement.parentNode.id.split('_')[1];

@@ -170,14 +170,13 @@ function changeGain(value) {
 function playNote(note) {
   if (note) {
     let key;
+    console.log(note)
     if (note[1] == 'B') {
       var note2 = note.slice(0, 2);
       console.log(sameNotes[note2] + note[2]);
       key = document.getElementById(sameNotes[note2] + note[2]);
-      console.log('Key', key);
     } else {
       key = document.getElementById(note);
-      console.log(key);
     }
     key.style.opacity = 0.5;
 
