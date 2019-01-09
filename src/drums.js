@@ -259,7 +259,7 @@ function initDrums() {
   //drum sound temperature
   temperature = 1.0;
 
-  //drum seed pazzern
+  //drum seed pattern
   pattern = [[], [], [], []];
 
   //drum play clock
