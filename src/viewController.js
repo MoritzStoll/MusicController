@@ -17,6 +17,9 @@ window.onload = function() {
   initPiano();
 };
 
+/*
+Initializes all the needed variables
+*/
 function initView() {
   //init view gloabl variables
   loading = document.getElementById('loading');

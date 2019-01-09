@@ -23,6 +23,10 @@ var pianoContext,
   notesBlack,
   sameNotes;
 
+/*
+Initializes all the needed variables for piano to play and connects all
+necessary audio nodes
+*/
 function initPiano() {
   //init gloabl variables
   pianoContext = Tone.context;
@@ -177,21 +181,24 @@ function initPiano() {
   distortion.toMaster();
 }
 
-function changeGain(value) {
-  gainNode.gain.value = value;
-}
-
+/*
+plays a Note given by the gamepad.js
+*/
 function playNote(note) {
   if (note) {
     let key;
+    //Notes with a B dont work with the Tone.Player Object here. 
+    //We have to find the equivalent Note in the sameNotes Object
     if (note[1] == 'B') {
       var note2 = note.slice(0, 2);
       key = document.getElementById(sameNotes[note2] + note[2]);
     } else {
       key = document.getElementById(note);
     }
+    //setting the opacity of the played note
     key.style.opacity = 0.5;
 
+    //actually play the note
     piano.triggerAttack(note);
     setTimeout(() => {
       key.style.opacity = 1;
@@ -199,8 +206,12 @@ function playNote(note) {
   }
 }
 
+/*
+playing a chord
+*/
 function playChord(chord, octaveNumber) {
   if (chord) {
+    //split the chord into its three notes and calls playNote for each of them
     var c = teoria.chord(chord).simple();
     c.forEach(note => {
       playNote(note.toUpperCase() + octaveNumber);
@@ -208,6 +219,9 @@ function playChord(chord, octaveNumber) {
   }
 }
 
+/*
+Creates a distortioncurve for the distortion effect
+*/
 function makeDistortionCurve(amount) {
   var n_samples = 44100,
     curve = new Float32Array(n_samples);
@@ -220,6 +234,10 @@ function makeDistortionCurve(amount) {
   return curve;
 }
 
+/*
+Based on what switches are activated, the audio nodes have to be
+connected different
+*/
 function pianoSwitches(checkedSwitch) {
   if (compActive && eqActive) {
     gainNode.connect(distortion);

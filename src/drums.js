@@ -31,6 +31,10 @@ var state,
   stepCounter,
   oneEighth;
 
+/*
+Initializes the Drums, connects all nodes, gets all DOM-Elements and makes 
+the Drums "ready to play"
+*/
 function initDrums() {
   //init global variables
   state = {
@@ -280,7 +284,9 @@ function initDrums() {
     startDrumMachine();
   });
 }
-
+/*
+gets the seed and creates a drumPattern
+*/
 function startDrumMachine() {
   state.pattern = state.startSeed.concat(_.times(state.patternLength, i => []));
   let seed = _.take(state.pattern, state.seedLength);
@@ -291,11 +297,17 @@ function startDrumMachine() {
     }
   );
 }
-
+/*
+creates little time differences to make the drums sound more
+humanized
+*/
 function humanizeTime(time) {
   return time - TIME_HUMANIZATION / 2 + Math.random() * TIME_HUMANIZATION;
 }
 
+/*
+Get The velocity of the current step
+*/
 function getStepVelocity(step) {
   if (step % 4 === 0) {
     return 'high';
@@ -306,6 +318,10 @@ function getStepVelocity(step) {
   }
 }
 
+/*
+One Tick, uses velocity and humanized time of the tick to play 
+the beats of teh current drums
+*/
 function tick(time = Tone.now() - Tone.context.lookAhead) {
   if (_.isNumber(stepCounter) && state.pattern) {
     stepCounter++;
@@ -324,14 +340,22 @@ function tick(time = Tone.now() - Tone.context.lookAhead) {
   }
 }
 
+/*
+starts the clock for the beat
+*/
 function playDrums() {
   ready && clock.start();
 }
-
+/*
+Stops the clock for the beat
+*/
 function stopDrums() {
   clock.stop();
 }
 
+/*
+generates the pattern of the seed with the rnn
+*/
 function generatePattern(seed, length) {
   let seedSeq = toNoteSequence(seed);
   return rnn
@@ -339,6 +363,9 @@ function generatePattern(seed, length) {
     .then(r => seed.concat(fromNoteSequence(r, length)));
 }
 
+/*
+transforms the pattern into a Note Sequence
+*/
 function toNoteSequence(pattern) {
   return mm.sequences.quantizeNoteSequence(
     {
@@ -369,6 +396,9 @@ function toNoteSequence(pattern) {
   );
 }
 
+/*
+Transforms notesequence into pattern
+*/
 function fromNoteSequence(seq, patternLength) {
   let res = _.times(patternLength, () => []);
   for (let { pitch, quantizedStartStep } of seq.notes) {
@@ -377,11 +407,17 @@ function fromNoteSequence(seq, patternLength) {
   return res;
 }
 
+/*
+sets the startpattern as the startseed
+*/
 function setSeedPattern(pattern) {
   state.startSeed = pattern;
   start();
 }
 
+/*
+creates seedpattern of the DOM-elements for pattern selection
+*/
 function createSeedPattern() {
   pattern = state.startSeed;
   let container = document.createElement('div');
@@ -418,7 +454,9 @@ function createSeedPattern() {
   });
   drumMenu.insertBefore(container, document.getElementById('firstDrumSound'));
 }
-
+/*
+drumSwitches define what audio nodes are connected
+*/
 function drumSwitches(checkedSwitch) {
   if (compActive && eqActive) {
     gainNodeDrums.connect(distortionDrums);
